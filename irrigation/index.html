@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Irrigation Plan — 61 Darwinia Terrace</title>
+  <style>
+    :root {
+      --blue: #1a6b8a;
+      --lightblue: #2a9bc4;
+      --dark: #050d1a;
+      --panel: #0a1525;
+      --cream: #eef6fd;
+      --gold: #c8832a;
+      --green: #2d5a1b;
+      --lightgreen: #4a8a2a;
+      --grey: #6a8a9a;
+      --red: #c0392b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--dark); color: var(--cream); font-family: Georgia, 'Times New Roman', serif; min-height: 100vh; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(160deg, #050d1a 0%, #0a1a2d 50%, #051a0d 100%);
+      padding: 36px 20px 28px;
+      text-align: center;
+      border-bottom: 2px solid var(--lightblue);
+    }
+    .tag { display: inline-block; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--lightblue); border: 1px solid var(--lightblue); padding: 3px 12px; border-radius: 2px; margin-bottom: 14px; }
+    .hero h1 { font-size: 30px; font-weight: bold; line-height: 1.2; margin-bottom: 6px; }
+    .hero h1 span { color: var(--lightblue); }
+    .hero .sub { color: var(--grey); font-size: 12px; font-style: italic; margin-bottom: 18px; }
+    .hero-pills { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+    .pill { background: rgba(255,255,255,0.05); border: 1px solid rgba(42,155,196,0.3); border-radius: 20px; padding: 4px 12px; font-size: 11px; color: var(--grey); }
+
+    .main { max-width: 560px; margin: 0 auto; padding: 18px 16px; }
+
+    /* STATUS */
+    .status { background: linear-gradient(135deg, rgba(10,21,37,0.95), rgba(5,26,13,0.95)); border: 1px solid rgba(42,155,196,0.3); border-radius: 8px; padding: 14px 16px; margin-bottom: 18px; display: flex; gap: 12px; align-items: flex-start; }
+    .status h3 { font-size: 15px; color: var(--lightblue); margin-bottom: 4px; }
+    .status p { font-size: 12px; color: var(--grey); line-height: 1.6; }
+
+    /* TABS */
+    .tabs { display: flex; border: 1px solid rgba(42,155,196,0.3); border-radius: 6px; overflow: hidden; margin-bottom: 18px; }
+    .tab-btn { flex: 1; padding: 10px 6px; background: transparent; color: var(--grey); border: none; cursor: pointer; font-size: 12px; font-family: Georgia, serif; transition: all 0.2s; }
+    .tab-btn.active { background: #0a2540; color: var(--cream); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    /* SECTION */
+    .section { margin-bottom: 22px; }
+    .sec-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid rgba(42,155,196,0.2); }
+    .sec-num { width: 24px; height: 24px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; flex-shrink: 0; }
+    .sec-title { font-size: 16px; color: var(--lightblue); letter-spacing: 1px; }
+
+    /* SHOPPING LIST */
+    .shop-item { background: var(--panel); border: 1px solid rgba(42,155,196,0.15); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 12px; align-items: flex-start; }
+    .shop-item.priority { border-color: rgba(42,155,196,0.4); }
+    .shop-badge { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .shop-badge.must { background: rgba(26,107,138,0.3); color: var(--lightblue); border: 1px solid rgba(42,155,196,0.3); }
+    .shop-badge.optional { background: rgba(45,90,27,0.3); color: #6aaf4a; border: 1px solid rgba(74,138,42,0.3); }
+    .shop-info { flex: 1; }
+    .shop-name { font-size: 13px; color: var(--cream); font-weight: bold; margin-bottom: 3px; }
+    .shop-desc { font-size: 11px; color: var(--grey); line-height: 1.5; margin-bottom: 4px; }
+    .shop-price { font-size: 12px; color: var(--gold); font-weight: bold; }
+
+    .total-bar { background: #0a1525; border: 1px solid rgba(42,155,196,0.3); border-radius: 8px; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; margin-top: 12px; }
+    .total-bar span { font-size: 12px; color: var(--grey); }
+    .total-bar strong { font-size: 18px; color: var(--lightblue); }
+
+    /* SYSTEM MAP */
+    .sys-map { background: #050d1a; border: 1px solid rgba(42,155,196,0.2); border-radius: 8px; padding: 16px; margin-bottom: 16px; }
+
+    /* INSTALL STEPS */
+    .steps { display: flex; flex-direction: column; gap: 0; }
+    .step { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .step:last-child { border-bottom: none; }
+    .step-num { width: 28px; height: 28px; min-width: 28px; background: var(--blue); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; flex-shrink: 0; margin-top: 1px; }
+    .step-text strong { display: block; font-size: 13px; color: var(--cream); margin-bottom: 3px; }
+    .step-text span { font-size: 11px; color: var(--grey); line-height: 1.5; }
+    .step-note { display: inline-block; margin-top: 4px; font-size: 10px; background: rgba(42,155,196,0.1); color: var(--lightblue); padding: 2px 8px; border-radius: 3px; }
+
+    /* PHASES */
+    .phase { background: var(--panel); border: 1px solid rgba(42,155,196,0.15); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+    .phase-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .phase-title { font-size: 13px; color: var(--cream); font-weight: bold; }
+    .phase-tag { font-size: 9px; letter-spacing: 1px; text-transform: uppercase; padding: 2px 8px; border-radius: 10px; }
+    .phase-tag.now { background: rgba(42,155,196,0.2); color: var(--lightblue); border: 1px solid rgba(42,155,196,0.3); }
+    .phase-tag.later { background: rgba(45,90,27,0.2); color: #6aaf4a; border: 1px solid rgba(74,138,42,0.3); }
+    .phase-detail { font-size: 11px; color: var(--grey); line-height: 1.6; }
+    .phase-items { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 5px; }
+    .phase-chip { font-size: 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 4px; padding: 2px 8px; color: var(--grey); }
+
+    /* TIMER SETTINGS */
+    .timer-box { background: #050d1a; border: 1px solid rgba(42,155,196,0.3); border-radius: 8px; padding: 14px; }
+    .timer-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 12px; }
+    .timer-row:last-child { border-bottom: none; }
+    .timer-label { color: var(--grey); }
+    .timer-val { color: var(--cream); font-weight: bold; }
+    .timer-val.highlight { color: var(--lightblue); }
+
+    /* CHECKLIST */
+    .ck-group { margin-bottom: 16px; }
+    .ck-group-title { font-size: 10px; letter-spacing: 2px; text-transform: uppercase; color: var(--lightblue); margin-bottom: 8px; padding-left: 4px; }
+    .ck-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 6px; margin-bottom: 6px; cursor: pointer; transition: background 0.2s; }
+    .ck-item:hover { background: rgba(255,255,255,0.06); }
+    .ck-item.done { opacity: 0.4; }
+    .ck-item.done .ck-text { text-decoration: line-through; color: var(--grey); }
+    .ck-box { width: 22px; height: 22px; min-width: 22px; border: 2px solid var(--lightblue); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 13px; margin-top: 1px; }
+    .ck-item.done .ck-box { background: var(--blue); border-color: var(--blue); color: white; }
+    .ck-text { font-size: 12px; line-height: 1.4; color: var(--cream); }
+    .ck-note { font-size: 10px; color: var(--grey); margin-top: 2px; font-style: italic; }
+
+    /* FOOTER */
+    .footer { text-align: center; padding: 20px 16px; border-top: 1px solid rgba(42,155,196,0.2); margin-top: 8px; }
+    .footer a { color: var(--lightblue); text-decoration: none; font-size: 12px; letter-spacing: 1px; }
+    .footer p { color: #1a3a4a; font-size: 10px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="tag">Garden Journal · Job #3</div>
+  <h1>Drip <span>Irrigation</span><br>System</h1>
+  <p class="sub">61 Darwinia Terrace · Phased installation · Starting maple bed</p>
+  <div class="hero-pills">
+    <span class="pill">💧 Drip system</span>
+    <span class="pill">📱 WiFi timer</span>
+    <span class="pill">🔧 DIY install</span>
+    <span class="pill">📐 Expandable</span>
+  </div>
+</div>
+
+<div class="main">
+
+  <div class="status">
+    <div style="font-size:28px;flex-shrink:0">💧</div>
+    <div>
+      <h3>Status: Plan ready — install before mulching</h3>
+      <p>Lay drip tube on top of paper bags before sugar cane goes down. Tap is right next to the bed. System designed to expand as each bed phase is completed.</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('shopping',this)">🛒 Shopping</button>
+    <button class="tab-btn" onclick="switchTab('install',this)">🔧 Install</button>
+    <button class="tab-btn" onclick="switchTab('phases',this)">📐 Phases</button>
+    <button class="tab-btn" onclick="switchTab('checklist',this)">✅ Checklist</button>
+  </div>
+
+  <!-- SHOPPING -->
+  <div id="panel-shopping" class="panel active">
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-num">$</div><div class="sec-title">Bunnings Shopping List</div></div>
+
+      <div class="shop-item priority">
+        <div class="shop-badge must">Must buy</div>
+        <div class="shop-info">
+          <div class="shop-name">Holman WiFi Tap Timer (dual outlet)</div>
+          <div class="shop-desc">Controls two zones independently from your phone. Skips watering if it rains. Set 5am schedule and never think about it again. Dual outlet means maple bed and future beds on separate schedules from day one.</div>
+          <div class="shop-price">~$100</div>
+        </div>
+      </div>
+
+      <div class="shop-item priority">
+        <div class="shop-badge must">Must buy</div>
+        <div class="shop-info">
+          <div class="shop-name">Holman Techline PC Drip Tube 13mm — 50m</div>
+          <div class="shop-desc">Pressure compensating drippers built in every 300mm. Lay on top of paper bags, mulch goes over the top. Delivers water direct to root zone, zero evaporation. The 50m roll covers the full maple bed with plenty for future expansion.</div>
+          <div class="shop-price">~$53</div>
+        </div>
+      </div>
+
+      <div class="shop-item priority">
+        <div class="shop-badge must">Must buy</div>
+        <div class="shop-info">
+          <div class="shop-name">13mm Black Poly Pipe — 25m</div>
+          <div class="shop-desc">Main supply line from tap to bed. Tap is right next to bed so you won't need much — but buy 25m now for future expansion to other beds.</div>
+          <div class="shop-price">~$26</div>
+        </div>
+      </div>
+
+      <div class="shop-item priority">
+        <div class="shop-badge must">Must buy</div>
+        <div class="shop-info">
+          <div class="shop-name">13mm Fittings Pack</div>
+          <div class="shop-desc">Tees, elbows, end caps, ratchet clamps. Buy more than you think you need — cheap and essential for expanding the system later. Get 2x tee packs, 1x elbow pack, 1x end cap pack, 1x clamp pack.</div>
+          <div class="shop-price">~$20</div>
+        </div>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-badge optional">Optional</div>
+        <div class="shop-info">
+          <div class="shop-name">Holman Moisture Sensor</div>
+          <div class="shop-desc">Pairs with WiFi timer — stops watering automatically if soil is already wet. Worth it for Canberra's unpredictable autumn rain. Prevents overwatering the maples during wet spells.</div>
+          <div class="shop-price">~$40</div>
+        </div>
+      </div>
+
+      <div class="shop-item">
+        <div class="shop-badge optional">Optional</div>
+        <div class="shop-info">
+          <div class="shop-name">4mm Flex Tube + Drippers on Spike — 10 pack</div>
+          <div class="shop-desc">For directing water precisely to each tree trunk zone — run a short 4mm branch off the main Techline directly into each diamond. Not essential but adds precision for the stressed maples.</div>
+          <div class="shop-price">~$25</div>
+        </div>
+      </div>
+
+      <div class="total-bar">
+        <span>Must-buy total:</span>
+        <strong>~$199</strong>
+      </div>
+      <div class="total-bar" style="margin-top:8px;border-color:rgba(74,138,42,0.3)">
+        <span style="color:#6aaf4a">Full kit with optionals:</span>
+        <strong style="color:#6aaf4a">~$264</strong>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- INSTALL -->
+  <div id="panel-install" class="panel">
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-num">⚡</div><div class="sec-title">Install Sequence</div></div>
+      <p style="font-size:11px;color:var(--grey);margin-bottom:14px;font-style:italic;">Do this AFTER paper bags are down, BEFORE sugar cane goes on. ~45 minutes total.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Screw WiFi timer onto tap</strong>
+            <span>Use the included tap adaptor. Download Holman Home app first — have it ready to pair immediately.</span>
+            <div class="step-note">Tap is right next to bed — no long runs needed</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>Run 13mm poly pipe along bed edge</strong>
+            <span>From timer along the retaining wall cap edge. This is your main supply line. Leave extra length at the end — capped for now, extend later to next bed.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>Tee off poly pipe into bed</strong>
+            <span>Use a 13mm tee fitting to branch the Techline drip tube off the main poly pipe at the start of the bed.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">4</div>
+          <div class="step-text">
+            <strong>Snake Techline drip tube through bed</strong>
+            <span>Lay it in S-curves across the paper bags. Bring it close to each tree zone — within 150mm of each trunk. Space the runs about 400-500mm apart to cover the full bed width.</span>
+            <div class="step-note">Keep 50mm clear of each trunk itself</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">5</div>
+          <div class="step-text">
+            <strong>End cap the Techline</strong>
+            <span>Fold and clip the end, or use a proper end cap fitting. Make sure it's secure — a loose end will spray water everywhere.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">6</div>
+          <div class="step-text">
+            <strong>End cap the poly pipe main line</strong>
+            <span>Cap the far end of the main supply line for now. When you expand to the next bed, remove the cap, insert a tee, extend.</span>
+            <div class="step-note">This is how you expand in phases — no digging up existing work</div>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">7</div>
+          <div class="step-text">
+            <strong>Turn on and test before mulching</strong>
+            <span>Run the system manually from the Holman app. Walk the bed and check every dripper is flowing. Fix any issues now before the mulch buries everything.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">8</div>
+          <div class="step-text">
+            <strong>Mulch over the top</strong>
+            <span>Sugar cane then pine bark go on top of the drip tube. It's now hidden, protected from UV, and delivering water directly to root zone.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">9</div>
+          <div class="step-text">
+            <strong>Set timer schedule in Holman app</strong>
+            <span>5:00am daily, 20-30 minutes per zone. Canberra summers — run daily. Once mulch settles and cooler weather arrives, reduce to every 2-3 days.</span>
+            <div class="step-note">Enable rain skip if you add the moisture sensor</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-num">⏱</div><div class="sec-title">Recommended Timer Settings</div></div>
+      <div class="timer-box">
+        <div class="timer-row"><span class="timer-label">Start time</span><span class="timer-val highlight">5:00am</span></div>
+        <div class="timer-row"><span class="timer-label">Duration — summer</span><span class="timer-val">25–30 mins</span></div>
+        <div class="timer-row"><span class="timer-label">Duration — autumn/winter</span><span class="timer-val">15 mins</span></div>
+        <div class="timer-row"><span class="timer-label">Frequency — hot days</span><span class="timer-val highlight">Daily</span></div>
+        <div class="timer-row"><span class="timer-label">Frequency — mild weather</span><span class="timer-val">Every 2–3 days</span></div>
+        <div class="timer-row"><span class="timer-label">Rain skip</span><span class="timer-val highlight">Enable if sensor fitted</span></div>
+        <div class="timer-row"><span class="timer-label">Zone 1</span><span class="timer-val">Maple bed</span></div>
+        <div class="timer-row"><span class="timer-label">Zone 2</span><span class="timer-val">Future bed (uncapped later)</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- PHASES -->
+  <div id="panel-phases" class="panel">
+
+    <div class="section">
+      <div class="sec-head"><div class="sec-num">📐</div><div class="sec-title">Expansion Plan</div></div>
+      <p style="font-size:11px;color:var(--grey);margin-bottom:14px;font-style:italic;">The system is designed to grow with the garden. Each phase adds a tee and extends — no digging up existing work.</p>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-title">Phase 1 — Maple Bed</div>
+          <div class="phase-tag now">This weekend</div>
+        </div>
+        <div class="phase-detail">Three maples along the driveway retaining wall. ~40m² covered by one run of Techline snaking through the bed. Main poly pipe laid along wall cap with end cap ready for Phase 2.</div>
+        <div class="phase-items">
+          <span class="phase-chip">WiFi timer installed</span>
+          <span class="phase-chip">Techline 50m</span>
+          <span class="phase-chip">3 tree zones covered</span>
+          <span class="phase-chip">Zone 1 active</span>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-title">Phase 2 — Crepe Myrtle Strip</div>
+          <div class="phase-tag later">Next month</div>
+        </div>
+        <div class="phase-detail">Remove end cap from main poly pipe. Insert tee. Extend poly pipe along crepe myrtle bed. Add second Techline run. Connect to Zone 2 on existing WiFi timer — already wired, just needs activating.</div>
+        <div class="phase-items">
+          <span class="phase-chip">Tee into existing pipe</span>
+          <span class="phase-chip">Second Techline run</span>
+          <span class="phase-chip">Zone 2 activated</span>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-title">Phase 3 — Full Front Bed</div>
+          <div class="phase-tag later">Future</div>
+        </div>
+        <div class="phase-detail">Once the full front bed is mulched, extend the system to cover the middle section between the two phases. May require a second timer or manifold depending on tap pressure across the full run.</div>
+        <div class="phase-items">
+          <span class="phase-chip">Middle section fill-in</span>
+          <span class="phase-chip">Possible second timer</span>
+          <span class="phase-chip">Full 16-18m coverage</span>
+        </div>
+      </div>
+
+      <div class="phase">
+        <div class="phase-head">
+          <div class="phase-title">Phase 4 — Corner Bed</div>
+          <div class="phase-tag later">Future</div>
+        </div>
+        <div class="phase-detail">The corner bed with the bottlebrush and natives. Once bottlebrush is pruned and bed is mulched, add a short drip run for that area. The natives are drought tolerant but will benefit from occasional deep watering.</div>
+        <div class="phase-items">
+          <span class="phase-chip">Bottlebrush zone</span>
+          <span class="phase-chip">Native plants</span>
+          <span class="phase-chip">Reduced frequency needed</span>
+        </div>
+      </div>
+
+      <!-- Diagram -->
+      <div style="background:#050d1a;border:1px solid rgba(42,155,196,0.2);border-radius:8px;padding:16px;margin-top:4px;">
+        <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--lightblue);margin-bottom:12px;">System layout — bird's eye</div>
+        <svg width="100%" viewBox="0 0 320 200" style="display:block;">
+          <!-- Street -->
+          <rect x="0" y="180" width="320" height="20" fill="#2a2a2a"/>
+          <text x="160" y="193" text-anchor="middle" fill="#666" font-size="9" font-family="Georgia">DARWINIA TERRACE</text>
+
+          <!-- Nature strip -->
+          <rect x="0" y="150" width="320" height="30" fill="#1a2a10"/>
+          <text x="160" y="168" text-anchor="middle" fill="#4a6a2a" font-size="9" font-family="Georgia">NATURE STRIP</text>
+
+          <!-- Retaining wall -->
+          <rect x="0" y="138" width="260" height="12" fill="#3a2a18"/>
+          <text x="120" y="147" text-anchor="middle" fill="#6a5a3a" font-size="8" font-family="Georgia">RETAINING WALL</text>
+
+          <!-- Maple bed — Phase 1 -->
+          <rect x="0" y="80" width="160" height="58" fill="#1a0d05" rx="2"/>
+          <rect x="0" y="80" width="160" height="58" fill="none" stroke="#2a9bc4" stroke-width="1.5" stroke-dasharray="4,2" rx="2"/>
+          <text x="80" y="100" text-anchor="middle" fill="#2a9bc4" font-size="9" font-family="Georgia" font-weight="bold">PHASE 1</text>
+          <text x="80" y="113" text-anchor="middle" fill="#6a8a9a" font-size="8" font-family="Georgia">Maple bed · Now</text>
+          <!-- Tree dots -->
+          <circle cx="30" cy="125" r="6" fill="#2d5a1b"/>
+          <circle cx="80" cy="125" r="8" fill="#2d5a1b"/>
+          <circle cx="130" cy="125" r="6" fill="#2d5a1b"/>
+
+          <!-- Crepe bed — Phase 2 -->
+          <rect x="165" y="80" width="95" height="58" fill="#0d1a05" rx="2"/>
+          <rect x="165" y="80" width="95" height="58" fill="none" stroke="#4a8a2a" stroke-width="1.5" stroke-dasharray="4,2" rx="2"/>
+          <text x="212" y="100" text-anchor="middle" fill="#4a8a2a" font-size="9" font-family="Georgia" font-weight="bold">PHASE 2</text>
+          <text x="212" y="113" text-anchor="middle" fill="#4a6a2a" font-size="8" font-family="Georgia">Crepe myrtles</text>
+          <circle cx="185" cy="125" r="5" fill="#1a3a10"/>
+          <circle cx="212" cy="125" r="5" fill="#1a3a10"/>
+          <circle cx="240" cy="125" r="5" fill="#1a3a10"/>
+
+          <!-- House -->
+          <rect x="0" y="20" width="200" height="55" fill="#0a0a15" rx="2"/>
+          <rect x="0" y="20" width="200" height="55" fill="none" stroke="#2a2a3a" stroke-width="1" rx="2"/>
+          <text x="100" y="50" text-anchor="middle" fill="#3a3a5a" font-size="11" font-family="Georgia">HOUSE</text>
+
+          <!-- Driveway -->
+          <rect x="265" y="20" width="55" height="160" fill="#1a1a1a" rx="2"/>
+          <text x="292" y="100" text-anchor="middle" fill="#444" font-size="8" font-family="Georgia" writing-mode="tb">DRIVEWAY</text>
+
+          <!-- TAP -->
+          <circle cx="12" cy="92" r="7" fill="#1a6b8a" stroke="#2a9bc4" stroke-width="1.5"/>
+          <text x="12" y="96" text-anchor="middle" fill="white" font-size="7" font-weight="bold">T</text>
+          <text x="12" y="75" text-anchor="middle" fill="#2a9bc4" font-size="7" font-family="Georgia">TAP</text>
+
+          <!-- Main poly pipe line -->
+          <line x1="12" y1="99" x2="12" y2="138" stroke="#2a9bc4" stroke-width="2"/>
+          <line x1="12" y1="138" x2="255" y2="138" stroke="#2a9bc4" stroke-width="2"/>
+
+          <!-- Drip tube Phase 1 — S curve -->
+          <path d="M 20 138 Q 20 120 50 120 Q 80 120 80 108 Q 80 96 110 96 Q 140 96 140 108 Q 140 120 155 120" fill="none" stroke="#1a9bca" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.8"/>
+
+          <!-- Tee point Phase 2 -->
+          <circle cx="175" cy="138" r="4" fill="#4a8a2a"/>
+          <line x1="175" y1="138" x2="175" y2="128" stroke="#4a8a2a" stroke-width="1.5" stroke-dasharray="3,2" opacity="0.6"/>
+
+          <!-- Legend -->
+          <line x1="210" y1="30" x2="230" y2="30" stroke="#2a9bc4" stroke-width="2"/>
+          <text x="233" y="34" fill="#6a8a9a" font-size="8" font-family="Georgia">Main pipe</text>
+          <line x1="210" y1="42" x2="230" y2="42" stroke="#1a9bca" stroke-width="1.5" stroke-dasharray="3,2"/>
+          <text x="233" y="46" fill="#6a8a9a" font-size="8" font-family="Georgia">Drip tube</text>
+          <circle cx="220" cy="55" r="3" fill="#4a8a2a"/>
+          <text x="233" y="58" fill="#6a8a9a" font-size="8" font-family="Georgia">Tee point</text>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CHECKLIST -->
+  <div id="panel-checklist" class="panel">
+    <div id="checklist"></div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <a href="../garden/">← Maple Bed Project</a> &nbsp;·&nbsp; <a href="../bottlebrush/">Bottlebrush Job →</a>
+  <p>dbb.family · Garden Journal · Built with Claude, March 2026</p>
+</div>
+
+<script>
+const CHECKS = [
+  { group:"Bunnings Run — Buy These", items:[
+    { text:"Holman WiFi Tap Timer (dual outlet)", note:"~$100 — the most important purchase" },
+    { text:"Holman Techline PC 13mm drip tube 50m", note:"~$53 — lays under mulch, drippers built in" },
+    { text:"13mm Black Poly Pipe 25m", note:"~$26 — main supply line" },
+    { text:"13mm Fittings — tees x2 packs, elbows, end caps, clamps", note:"~$20 total — buy more than you think" },
+    { text:"Holman moisture sensor (optional)", note:"~$40 — stops watering if soil already wet" }
+  ]},
+  { group:"Install — Phase 1 Maple Bed", items:[
+    { text:"Download Holman Home app before starting", note:"iOS or Android — have it ready to pair" },
+    { text:"Screw WiFi timer onto tap", note:"Use included adaptor" },
+    { text:"Paper bags already down in bed", note:"Drip tube goes on top of bags" },
+    { text:"Run poly pipe along bed edge from tap", note:"Along retaining wall cap — leave extra length, end cap for now" },
+    { text:"Tee off into bed, lay Techline in S-curves", note:"Close to each tree zone, 400-500mm spacing" },
+    { text:"End cap Techline", note:"Fold and clip securely" },
+    { text:"Turn on and test — walk the bed", note:"Check all drippers flowing before mulching" },
+    { text:"Mulch over the top", note:"Sugar cane then pine bark on top of drip tube" },
+    { text:"Set 5am schedule in Holman app", note:"25-30 mins daily for summer" }
+  ]},
+  { group:"Phase 2 — When Ready", items:[
+    { text:"Remove end cap from main poly pipe", note:"At the far end near crepe bed" },
+    { text:"Insert tee fitting", note:"Branch off to second bed" },
+    { text:"Extend poly pipe to crepe myrtle bed", note:"Run along that bed edge" },
+    { text:"Lay second Techline run", note:"Same S-curve approach" },
+    { text:"Activate Zone 2 in Holman app", note:"Set separate schedule for that bed" }
+  ]}
+];
+
+const cl = document.getElementById('checklist');
+const getState = () => { try { return JSON.parse(localStorage.getItem('irrigChecks')||'{}'); } catch(e) { return {}; } };
+
+CHECKS.forEach((group, gi) => {
+  const grp = document.createElement('div');
+  grp.className = 'ck-group';
+  grp.innerHTML = `<div class="ck-group-title">${group.group}</div>`;
+  group.items.forEach((item, ii) => {
+    const key = `${gi}-${ii}`;
+    const done = getState()[key]||false;
+    const el = document.createElement('div');
+    el.className = `ck-item${done?' done':''}`;
+    el.innerHTML = `
+      <div class="ck-box">${done?'✓':''}</div>
+      <div>
+        <div class="ck-text">${item.text}</div>
+        ${item.note?`<div class="ck-note">${item.note}</div>`:''}
+      </div>`;
+    el.addEventListener('click', () => {
+      const s = getState();
+      s[key] = !s[key];
+      try { localStorage.setItem('irrigChecks', JSON.stringify(s)); } catch(e) {}
+      el.classList.toggle('done');
+      el.querySelector('.ck-box').textContent = s[key]?'✓':'';
+    });
+    grp.appendChild(el);
+  });
+  cl.appendChild(grp);
+});
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
