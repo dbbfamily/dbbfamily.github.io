@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Garden Bed Guide — 61 Darwinia Terrace</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+```
+body {
+  background: #fdf6ec;
+  font-family: Georgia, serif;
+  min-height: 100vh;
+  padding: 20px;
+  color: #2d1a0a;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  border-bottom: 3px solid #8a6535;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+.header h1 {
+  font-size: 22px;
+  font-weight: bold;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.header p {
+  color: #7a5535;
+  font-size: 13px;
+  margin-top: 4px;
+  font-style: italic;
+}
+
+/* TABS */
+.tabs {
+  display: flex;
+  border: 2px solid #8a6535;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.tab-btn {
+  flex: 1;
+  padding: 10px;
+  background: #fdf6ec;
+  color: #5C3317;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  font-family: Georgia, serif;
+  transition: all 0.2s;
+}
+.tab-btn.active {
+  background: #5C3317;
+  color: #f5e6d3;
+}
+
+/* PANELS */
+.panel { display: none; }
+.panel.active { display: block; }
+
+/* SECTION TITLES */
+.section-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.section-sub {
+  text-align: center;
+  color: #7a5535;
+  font-size: 12px;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+/* ── CROSS SECTION ── */
+.cross-section-wrap {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+.layer-stack {
+  flex: 1;
+  border: 2px solid #8a6535;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.layer-row {
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border-bottom: 1px dashed rgba(255,255,255,0.3);
+  cursor: default;
+  transition: filter 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+.layer-row:last-child { border-bottom: none; }
+.layer-row:hover { filter: brightness(1.15); }
+
+.layer-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  background-size: auto;
+  background-repeat: repeat;
+}
+.layer-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+.layer-name {
+  font-weight: bold;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  min-width: 140px;
+}
+.layer-depth {
+  font-size: 13px;
+  font-weight: bold;
+  background: rgba(0,0,0,0.25);
+  padding: 2px 8px;
+  border-radius: 3px;
+  min-width: 70px;
+  text-align: center;
+}
+.tree-only-badge {
+  font-size: 9px;
+  background: rgba(255,200,50,0.3);
+  padding: 1px 4px;
+  border-radius: 3px;
+  margin-left: 6px;
+}
+
+/* Legend sidebar */
+.legend-sidebar {
+  width: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.legend-card {
+  background: #fdf6ec;
+  border: 2px solid #e0cca0;
+  border-radius: 6px;
+  padding: 6px 10px;
+  transition: all 0.2s;
+  cursor: default;
+}
+.legend-card:hover {
+  background: #fffaf0;
+}
+.legend-card-title {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.legend-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.legend-label {
+  font-size: 10px;
+  font-weight: bold;
+  color: #3d2210;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.legend-desc {
+  font-size: 10px;
+  color: #7a5535;
+  line-height: 1.4;
+}
+
+/* Total depth bar */
+.total-depth {
+  margin-top: 12px;
+  background: #2d1a0a;
+  color: #f5e6d3;
+  border-radius: 6px;
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+.total-depth-num {
+  font-weight: bold;
+  font-size: 16px;
+  color: #f5c842;
+}
+
+/* ── BIRDS EYE ── */
+.map-wrap { position: relative; width: 100%; user-select: none; }
+
+.map-street {
+  text-align: center;
+  background: #c8c0b0;
+  color: #555;
+  font-size: 11px;
+  padding: 5px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  border-radius: 4px 4px 0 0;
+}
+.map-wall {
+  background: #b0a090;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: bold;
+}
+.map-bed {
+  background: #5C3317;
+  position: relative;
+  height: 220px;
+  overflow: hidden;
+}
+.map-bed-texture {
+  position: absolute;
+  inset: 0;
+  opacity: 0.3;
+}
+.map-house {
+  background: #c8b090;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #5a3a18;
+  font-size: 10px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  border-radius: 0 0 4px 4px;
+}
+
+/* Bays */
+.bay {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-left: 1px dashed rgba(255,255,255,0.2);
+  border-right: 1px dashed rgba(255,255,255,0.2);
+  transition: background 0.2s;
+  cursor: default;
+  z-index: 1;
+}
+.bay:hover { background: rgba(255,200,80,0.2); }
+.bay-label {
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.4);
+  color: #f5e6d3;
+  font-size: 9px;
+  padding: 2px 5px;
+  border-radius: 3px;
+  white-space: nowrap;
+  font-weight: bold;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+/* Trees */
+.tree-wrap {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 3;
+  cursor: default;
+}
+.tree-compost-ring {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(107,76,42,0.85);
+  border: 2px dashed #f5c842;
+  border-radius: 50%;
+  z-index: 2;
+}
+.tree-no-paper {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background: rgba(60,30,10,0.9);
+  border: 2px solid #ff6b35;
+  z-index: 3;
+}
+.tree-trunk {
+  position: relative;
+  z-index: 4;
+  background: #2d1505;
+  border: 3px solid #6b4020;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f5e6d3;
+  font-weight: bold;
+}
+.tree-tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 30px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2d1a0a;
+  color: #f5e6d3;
+  font-size: 10px;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+  pointer-events: none;
+}
+.tree-wrap:hover .tree-tooltip { display: block; }
+
+/* Paper bag label */
+.paper-label {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(212,180,131,0.9);
+  color: #3d2800;
+  font-size: 10px;
+  padding: 3px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  z-index: 5;
+  white-space: nowrap;
+}
+
+/* Map legend */
+.map-legend {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 14px;
+}
+.map-legend-item {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  background: #fdf6ec;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #e0cca0;
+}
+.map-legend-swatch {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+  border-radius: 2px;
+  margin-top: 2px;
+}
+.map-legend-text strong {
+  display: block;
+  font-size: 10px;
+  font-weight: bold;
+  color: #3d2210;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.map-legend-text span {
+  font-size: 10px;
+  color: #7a5535;
+  margin-top: 2px;
+  display: block;
+}
+
+/* FOOTER */
+.footer-bar {
+  margin-top: 20px;
+  background: #2d1a0a;
+  border-radius: 8px;
+  padding: 12px 16px;
+  color: #f5e6d3;
+  font-size: 11px;
+  line-height: 1.8;
+}
+.footer-bar strong {
+  font-size: 12px;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .cross-section-wrap { flex-direction: column; }
+  .legend-sidebar { width: 100%; flex-direction: row; flex-wrap: wrap; }
+  .legend-card { flex: 1 1 45%; }
+  .paper-label { font-size: 8px; padding: 2px 6px; }
+}
+```
+
+  </style>
+</head>
+<body>
+
+  <!-- SVG Patterns (hidden) -->
+
+  <svg width="0" height="0" style="position:absolute">
+    <defs>
+      <pattern id="barkPat" x="0" y="0" width="20" height="8" patternUnits="userSpaceOnUse">
+        <rect width="20" height="8" fill="#5C3317"/>
+        <ellipse cx="5" cy="4" rx="4" ry="2" fill="#7a4a2a" opacity="0.6"/>
+        <ellipse cx="14" cy="2" rx="3" ry="1.5" fill="#3d2210" opacity="0.5"/>
+        <ellipse cx="17" cy="6" rx="2.5" ry="1.5" fill="#8a5535" opacity="0.4"/>
+      </pattern>
+      <pattern id="strawPat" x="0" y="0" width="16" height="6" patternUnits="userSpaceOnUse">
+        <rect width="16" height="6" fill="#C8A45A"/>
+        <line x1="0" y1="1" x2="16" y2="2" stroke="#a07830" stroke-width="0.8" opacity="0.7"/>
+        <line x1="0" y1="4" x2="16" y2="3" stroke="#e0c070" stroke-width="0.8" opacity="0.6"/>
+        <line x1="3" y1="0" x2="5" y2="6" stroke="#b09040" stroke-width="0.5" opacity="0.5"/>
+      </pattern>
+      <pattern id="compostPat" x="0" y="0" width="12" height="12" patternUnits="userSpaceOnUse">
+        <rect width="12" height="12" fill="#6B4C2A"/>
+        <circle cx="3" cy="3" r="1.5" fill="#4a3018" opacity="0.7"/>
+        <circle cx="9" cy="7" r="1" fill="#8a6035" opacity="0.6"/>
+        <circle cx="6" cy="10" r="1.5" fill="#3d2510" opacity="0.8"/>
+        <circle cx="10" cy="2" r="1" fill="#9a7040" opacity="0.5"/>
+      </pattern>
+      <pattern id="paperPat" x="0" y="0" width="30" height="14" patternUnits="userSpaceOnUse">
+        <rect width="30" height="14" fill="#D4B483"/>
+        <rect x="0" y="0" width="28" height="6" fill="#e0c99a" rx="0.5" opacity="0.8"/>
+        <rect x="2" y="7" width="26" height="6" fill="#c8a870" rx="0.5" opacity="0.8"/>
+        <line x1="0" y1="6.5" x2="30" y2="6.5" stroke="#a08050" stroke-width="0.5"/>
+      </pattern>
+      <pattern id="grassPat" x="0" y="0" width="10" height="16" patternUnits="userSpaceOnUse">
+        <rect width="10" height="16" fill="#4a7c3f"/>
+        <line x1="2" y1="16" x2="1" y2="6" stroke="#6aaf5a" stroke-width="1.5"/>
+        <line x1="5" y1="16" x2="6" y2="4" stroke="#5a9c4a" stroke-width="1.5"/>
+        <line x1="8" y1="16" x2="9" y2="8" stroke="#4a8a3a" stroke-width="1.5"/>
+      </pattern>
+      <pattern id="soilPat" x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
+        <rect width="10" height="10" fill="#3d2b1a"/>
+        <circle cx="2" cy="3" r="0.8" fill="#5d4030" opacity="0.6"/>
+        <circle cx="7" cy="7" r="0.6" fill="#2d1d0d" opacity="0.8"/>
+        <circle cx="5" cy="1" r="0.5" fill="#6d5040" opacity="0.4"/>
+      </pattern>
+    </defs>
+  </svg>
+
+  <!-- HEADER -->
+
+  <div class="header">
+    <h1>🌳 61 Darwinia Terrace</h1>
+    <p>Garden Bed Mulching Reference — Three Maple Trees</p>
+  </div>
+
+  <!-- TABS -->
+
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('layers', this)">📐 Layer Depths (cross-section)</button>
+    <button class="tab-btn" onclick="switchTab('map', this)">🗺 Bird's Eye Map</button>
+  </div>
+
+  <!-- PANEL: CROSS SECTION -->
+
+  <div id="panel-layers" class="panel active">
+    <h2 class="section-title">Vertical Cross-Section</h2>
+    <p class="section-sub">How the layers stack — viewed from the side</p>
+
+```
+<div class="cross-section-wrap">
+  <!-- Stack -->
+  <div class="layer-stack" id="layerStack"></div>
+  <!-- Sidebar -->
+  <div class="legend-sidebar" id="legendSidebar"></div>
+</div>
+
+<div class="total-depth">
+  <span>Total added depth over existing ground:</span>
+  <span class="total-depth-num">~150mm</span>
+</div>
+```
+
+  </div>
+
+  <!-- PANEL: BIRDS EYE -->
+
+  <div id="panel-map" class="panel">
+    <h2 class="section-title">Bird's Eye Map</h2>
+    <p class="section-sub">Looking straight down — work left to right in bays</p>
+
+```
+<div class="map-wrap">
+  <div class="map-street">← STREET / ROAD →</div>
+  <div class="map-wall">RETAINING WALL CAP</div>
+
+  <div class="map-bed" id="mapBed">
+    <svg class="map-bed-texture" width="100%" height="100%">
+      <rect width="100%" height="100%" fill="url(#barkPat)"/>
+    </svg>
+    <!-- Bays injected by JS -->
+    <!-- Trees injected by JS -->
+    <div class="paper-label">📄 PAPER BAGS cover entire bed — except inside orange diamonds</div>
+  </div>
+
+  <div class="map-house">← HOUSE / DRIVEWAY SIDE →</div>
+</div>
+
+<!-- Map legend -->
+<div class="map-legend">
+  <div class="map-legend-item">
+    <div class="map-legend-swatch" style="background:#6B4C2A;border:2px dashed #f5c842;border-radius:50%"></div>
+    <div class="map-legend-text">
+      <strong>Mushroom compost zone</strong>
+      <span>~40mm deep, tree zones only</span>
+    </div>
+  </div>
+  <div class="map-legend-item">
+    <div class="map-legend-swatch" style="background:#3d1e08;border:2px solid #ff6b35;transform:rotate(45deg)"></div>
+    <div class="map-legend-text">
+      <strong>No paper zone (diamond)</strong>
+      <span>Leave soil open around trunk</span>
+    </div>
+  </div>
+  <div class="map-legend-item">
+    <div class="map-legend-swatch" style="background:#5C3317"></div>
+    <div class="map-legend-text">
+      <strong>Full bed layers</strong>
+      <span>Paper + sugar cane + pine bark stacked</span>
+    </div>
+  </div>
+  <div class="map-legend-item">
+    <div class="map-legend-swatch" style="background:rgba(255,200,80,0.3);border:1px dashed #aaa"></div>
+    <div class="map-legend-text">
+      <strong>Working bays</strong>
+      <span>Do 1 bay at a time, wet & cover before moving</span>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- FOOTER -->
+
+  <div class="footer-bar">
+    <strong>⚡ ON THE DAY — QUICK ORDER:</strong>
+    1. Bunnings run first (sugar cane bales + pine bark) →
+    2. Lay paper bags in 1 bay →
+    3. Wet immediately →
+    4. Cover with sugar cane before moving →
+    5. Repeat bay by bay →
+    6. Drop mushroom compost in tree diamonds →
+    7. Pine bark over everything last
+  </div>
+
+<script>
+  // ── DATA ──
+  const LAYERS = [
+    { name:"PINE BARK",        depth:"70mm",      bg:"#5C3317", text:"#f5e6d3", pat:"barkPat",    h:90,  purpose:"Top finish — weed suppression & moisture lock" },
+    { name:"SUGAR CANE MULCH", depth:"40mm",      bg:"#C8A45A", text:"#3d2800", pat:"strawPat",   h:55,  purpose:"Filler layer — breaks down into organic matter" },
+    { name:"MUSHROOM COMPOST", depth:"40mm",      bg:"#6B4C2A", text:"#f5e6d3", pat:"compostPat", h:55,  purpose:"Tree zones only — nutrients & microbial life", treeOnly:true },
+    { name:"PAPER BAGS",       depth:"2 layers",  bg:"#D4B483", text:"#3d2800", pat:"paperPat",   h:28,  purpose:"Grass killer — wet thoroughly, overlap 150mm" },
+    { name:"GRASS (existing)", depth:"cut short", bg:"#4a7c3f", text:"#f0ffe0", pat:"grassPat",   h:35,  purpose:"Freshly mowed — good base condition" },
+    { name:"SOIL",             depth:"↓",         bg:"#3d2b1a", text:"#c4a882", pat:"soilPat",    h:45,  purpose:"Compacted — layers above will restore biology" }
+  ];
+
+  const TREES = [
+    { id:"L", x:18, label:"🌳 Left Tree",   note:"Near letterbox",           big:false },
+    { id:"M", x:49, label:"🌳 Middle Tree", note:"Largest — most stressed",  big:true  },
+    { id:"R", x:80, label:"🌳 Right Tree",  note:"Near knight statue",       big:false }
+  ];
+
+  const BAYS = [
+    { id:1, x:2,  w:14 }, { id:2, x:26, w:14 },
+    { id:3, x:44, w:12 }, { id:4, x:60, w:14 },
+    { id:5, x:78, w:18 }
+  ];
+
+  // ── BUILD CROSS-SECTION ──
+  const stack   = document.getElementById('layerStack');
+  const sidebar = document.getElementById('legendSidebar');
+
+  LAYERS.forEach((l, i) => {
+    // Row
+    const row = document.createElement('div');
+    row.className = 'layer-row';
+    row.style.cssText = `height:${l.h}px; background-color:${l.bg};`;
+
+    const tex = document.createElement('svg');
+    tex.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;opacity:0.35;';
+    tex.innerHTML = `<rect width="100%" height="100%" fill="url(#${l.pat})"/>`;
+    row.appendChild(tex);
+
+    const content = document.createElement('div');
+    content.className = 'layer-content';
+    content.innerHTML = `
+      <span class="layer-name" style="color:${l.text}">
+        ${l.name}
+        ${l.treeOnly ? '<span class="tree-only-badge">🌳 tree zones only</span>' : ''}
+      </span>
+      <span class="layer-depth" style="color:${l.text}">${l.depth}</span>`;
+    row.appendChild(content);
+    stack.appendChild(row);
+
+    // Sidebar card
+    const card = document.createElement('div');
+    card.className = 'legend-card';
+    card.innerHTML = `
+      <div class="legend-card-title">
+        <div class="legend-swatch" style="background:${l.bg}"></div>
+        <span class="legend-label">${l.name}</span>
+      </div>
+      <p class="legend-desc">${l.purpose}</p>`;
+    sidebar.appendChild(card);
+
+    // Hover sync
+    [row, card].forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        stack.querySelectorAll('.layer-row')[i].style.filter = 'brightness(1.2)';
+        sidebar.querySelectorAll('.legend-card')[i].style.borderColor = l.bg;
+        sidebar.querySelectorAll('.legend-card')[i].style.background = '#fffaf0';
+      });
+      el.addEventListener('mouseleave', () => {
+        stack.querySelectorAll('.layer-row')[i].style.filter = '';
+        sidebar.querySelectorAll('.legend-card')[i].style.borderColor = '#e0cca0';
+        sidebar.querySelectorAll('.legend-card')[i].style.background = '#fdf6ec';
+      });
+    });
+  });
+
+  // ── BUILD BIRD'S EYE ──
+  const bed = document.getElementById('mapBed');
+
+  BAYS.forEach(b => {
+    const bay = document.createElement('div');
+    bay.className = 'bay';
+    bay.style.cssText = `left:${b.x}%;width:${b.w}%;`;
+    bay.innerHTML = `<div class="bay-label">Bay ${b.id}</div>`;
+    bed.appendChild(bay);
+  });
+
+  TREES.forEach(t => {
+    const sz     = t.big ? 28 : 22;
+    const ring   = t.big ? 90 : 74;
+    const diamond= t.big ? 52 : 42;
+
+    const wrap = document.createElement('div');
+    wrap.className = 'tree-wrap';
+    wrap.style.cssText = `left:${t.x}%;`;
+
+    wrap.innerHTML = `
+      <div class="tree-compost-ring" style="width:${ring}px;height:${ring}px;margin-left:-${ring/2}px;margin-top:-${ring/2}px;"></div>
+      <div class="tree-no-paper"     style="width:${diamond}px;height:${diamond}px;margin-left:-${diamond/2}px;margin-top:-${diamond/2}px;"></div>
+      <div class="tree-trunk"        style="width:${sz}px;height:${sz}px;font-size:${t.big?14:11}px;">${t.id}</div>
+      <div class="tree-tooltip"><strong>${t.label}</strong><br>${t.note}</div>`;
+
+    bed.appendChild(wrap);
+  });
+
+  // ── TAB SWITCHING ──
+  function switchTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('panel-' + id).classList.add('active');
+    btn.classList.add('active');
+  }
+</script>
+
+</body>
+</html>
