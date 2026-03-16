@@ -207,7 +207,7 @@
   </div>
   <div class="total-bar">
     <span>Total added depth:</span>
-    <span class="total-num">~150mm</span>
+    <span class="total-num">~110mm</span>
   </div>
 </div>
 
@@ -226,12 +226,13 @@
 
 <script>
 const LAYERS = [
-  { name:"Pine Bark",        depth:"70mm",     bg:"#5C3317", text:"#f5e6d3", pat:"barkPat",    h:85, purpose:"Top finish — weed suppression & moisture lock" },
-  { name:"Sugar Cane Mulch", depth:"40mm",     bg:"#C8A45A", text:"#3d2800", pat:"strawPat",   h:55, purpose:"Filler layer — breaks down into organic matter" },
-  { name:"Mushroom Compost", depth:"40mm",     bg:"#6B4C2A", text:"#f5e6d3", pat:"compostPat", h:55, purpose:"Tree zones only — nutrients & microbial life", treeOnly:true },
-  { name:"Paper Bags",       depth:"2 layers", bg:"#D4B483", text:"#3d2800", pat:"paperPat",   h:28, purpose:"Grass killer — wet thoroughly, overlap 150mm" },
-  { name:"Grass (existing)", depth:"cut short",bg:"#4a7c3f", text:"#f0ffe0", pat:"grassPat",   h:32, purpose:"Freshly mowed — ideal base condition" },
-  { name:"Soil",             depth:"↓",        bg:"#3d2b1a", text:"#c4a882", pat:"soilPat",    h:42, purpose:"Compacted — layers above will restore biology" }
+  { name:"Pine Bark Blend",  depth:"40mm",     bg:"#5C3317", text:"#f5e6d3", pat:"barkPat",    h:70, purpose:"Top finish — 6x 50L Richgro blend bags. Weed suppression & moisture lock." },
+  { name:"Mushroom Compost", depth:"40mm",     bg:"#6B4C2A", text:"#f5e6d3", pat:"compostPat", h:50, purpose:"Tree zones only — nutrients & microbial life", treeOnly:true },
+  { name:"Sugar Cane Mulch", depth:"light",    bg:"#C8A45A", text:"#3d2800", pat:"strawPat",   h:50, purpose:"2x Oreco bales (covers 52m²) — breaks down into organic matter" },
+  { name:"Dynamic Lifter",   depth:"scatter",  bg:"#8B6914", text:"#f5e6d3", pat:"compostPat", h:35, purpose:"1x 17.5kg bag — scatter lightly across whole bed before sugar cane" },
+  { name:"Paper Bags",       depth:"2 layers", bg:"#D4B483", text:"#3d2800", pat:"paperPat",   h:28, purpose:"Woolworths bags — wet thoroughly, overlap 150mm, diamond gap at trunks" },
+  { name:"Grass (existing)", depth:"cut short",bg:"#4a7c3f", text:"#f0ffe0", pat:"grassPat",   h:30, purpose:"Freshly mowed — good base condition" },
+  { name:"Soil",             depth:"↓",        bg:"#3d2b1a", text:"#c4a882", pat:"soilPat",    h:40, purpose:"Compacted — layers above will restore biology over time" }
 ];
 
 const TREES = [
@@ -247,32 +248,36 @@ const BAYS = [
 ];
 
 const CHECKS = [
-  { section:"Before You Start", items:[
-    { text:"Bunnings run complete", note:"Sugar cane x5 bales + pine bark x20 bags" },
-    { text:"Paper bags staged and ready", note:"~80-100 Woolworths bags needed" },
-    { text:"Hose connected and reaching full bed", note:"Need it running before bags go down" },
-    { text:"Mushroom compost near tree zones", note:"Save it all — don't spread wide" }
+  { section:"Materials — What You Bought", items:[
+    { text:"Sugar cane mulch x2 bales (Oreco)", note:"Covers 52m² — more than enough for full bed" },
+    { text:"Pine bark blend x6 bags 50L (Richgro)", note:"~7.5m² at 40mm — first pass, go back for more" },
+    { text:"Dynamic Lifter x1 bag 17.5kg", note:"Scatter lightly across full bed before sugar cane" },
+    { text:"Mushroom compost — already on hand", note:"Tree diamond zones only" },
+    { text:"Woolworths paper bags — ~80-100", note:"2 layers, stagger seams" },
+    { text:"Hose connected and reaching full bed", note:"Need it running before bags go down" }
   ]},
-  { section:"Bay 1 — Far end (Left maple)", items:[
-    { text:"Lay paper bags — Bay 1", note:"2 layers, stagger seams, diamond gap around 🌳L" },
-    { text:"Wet bags thoroughly — Bay 1", note:"Soak before moving on" },
-    { text:"Sugar cane over bags — Bay 1", note:"40mm — cover immediately to stop bags lifting" }
+  { section:"Layer Sequence — Whole Bed First", items:[
+    { text:"Lay paper bags across entire bed", note:"2 layers, stagger seams, diamond gap at each trunk" },
+    { text:"Wet bags thoroughly", note:"Soak well before next layer" },
+    { text:"Scatter Dynamic Lifter across whole bed", note:"Light even scatter — not too thick" },
+    { text:"Spread sugar cane over entire bed", note:"2 bales covers 52m² — light even layer" }
   ]},
-  { section:"Bay 2 — Middle (Middle maple)", items:[
-    { text:"Lay paper bags — Bay 2", note:"Biggest tree 🌳M — give 400mm clear diamond" },
-    { text:"Wet bags thoroughly — Bay 2" },
-    { text:"Sugar cane over bags — Bay 2" }
+  { section:"Bay 1 — Far end (Left maple 🌳L)", items:[
+    { text:"Mushroom compost in 🌳L diamond zone", note:"~40mm, 50mm clear of trunk" },
+    { text:"Pine bark over Bay 1", note:"40mm — as far as bags go" }
   ]},
-  { section:"Bay 3 — Driveway side (Right maple)", items:[
-    { text:"Lay paper bags — Bay 3", note:"Right up to driveway retaining wall edge" },
-    { text:"Wet bags thoroughly — Bay 3" },
-    { text:"Sugar cane over bags — Bay 3" }
+  { section:"Bay 2 — Middle (Middle maple 🌳M)", items:[
+    { text:"Mushroom compost in 🌳M diamond zone", note:"Biggest zone — 400mm radius, most stressed tree" },
+    { text:"Pine bark over Bay 2", note:"Go back to Bunnings if bags run out" }
+  ]},
+  { section:"Bay 3 — Driveway side (Right maple 🌳R)", items:[
+    { text:"Mushroom compost in 🌳R diamond zone", note:"~40mm, 50mm clear of trunk" },
+    { text:"Pine bark over Bay 3", note:"Right up to driveway retaining wall edge" }
   ]},
   { section:"Finish", items:[
-    { text:"Mushroom compost in each tree diamond", note:"Priority: Middle 🌳M → Left 🌳L → Right 🌳R" },
-    { text:"Pine bark over entire bed", note:"70mm — over everything, including compost zones" },
-    { text:"Water entire bed thoroughly", note:"Settle layers, activate soil biology" },
-    { text:"Stand back and admire 🌳", note:"First page of dbb.family earned it" }
+    { text:"Water entire bed thoroughly", note:"Settle all layers, activate soil biology" },
+    { text:"Check all trunk bases are clear", note:"No material touching bark — causes collar rot" },
+    { text:"Stand back and admire 🌳", note:"You earned it — job done for today" }
   ]}
 ];
 
