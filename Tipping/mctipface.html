@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PROJECT MCTIPFACE — Build Log [DECLASSIFIED]</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0c;
+    --surface: #141414;
+    --surface-2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #c8c8c8;
+    --text-dim: #5a5a5a;
+    --green: #39ff14;
+    --green-dim: rgba(57, 255, 20, 0.08);
+    --amber: #ffbf00;
+    --amber-dim: rgba(255, 191, 0, 0.08);
+    --red: #ff3333;
+    --red-dim: rgba(255, 51, 51, 0.08);
+    --orange: #ff6b35;
+    --redacted: #1a1a1a;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 14px;
+line-height: 1.7;
+min-height: 100vh;
+overflow-x: hidden;
+}
+
+/* Scanline overlay */
+body::after {
+content: ‘’;
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+pointer-events: none;
+background: repeating-linear-gradient(
+0deg,
+transparent,
+transparent 2px,
+rgba(0,0,0,0.03) 2px,
+rgba(0,0,0,0.03) 4px
+);
+z-index: 1000;
+}
+
+.page {
+max-width: 700px;
+margin: 0 auto;
+padding: 48px 24px 80px;
+}
+
+/* Classification header */
+.classified {
+text-align: center;
+border: 2px solid var(–red);
+padding: 12px 24px;
+margin-bottom: 48px;
+position: relative;
+animation: fadeIn 1s ease-out;
+}
+.classified-text {
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 4px;
+text-transform: uppercase;
+color: var(–red);
+}
+.classified-sub {
+font-size: 10px;
+letter-spacing: 2px;
+color: var(–text-dim);
+margin-top: 4px;
+}
+.declassified-stamp {
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%) rotate(-12deg);
+font-family: ‘Playfair Display’, serif;
+font-weight: 900;
+font-size: 3.5rem;
+color: var(–red);
+opacity: 0.12;
+letter-spacing: 6px;
+text-transform: uppercase;
+white-space: nowrap;
+pointer-events: none;
+}
+
+/* Title */
+.title-block {
+margin-bottom: 48px;
+animation: fadeIn 1.2s ease-out;
+}
+.title-block h1 {
+font-family: ‘Playfair Display’, serif;
+font-weight: 900;
+font-size: 2.8rem;
+color: var(–orange);
+line-height: 1.1;
+margin-bottom: 12px;
+}
+.title-meta {
+font-size: 11px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+}
+.title-meta span { color: var(–green); }
+
+/* Log entries */
+.log-entry {
+margin-bottom: 40px;
+padding-left: 20px;
+border-left: 2px solid var(–border);
+position: relative;
+opacity: 0;
+animation: slideIn 0.6s ease-out forwards;
+}
+.log-entry:nth-child(1) { animation-delay: 0.3s; }
+.log-entry:nth-child(2) { animation-delay: 0.5s; }
+.log-entry:nth-child(3) { animation-delay: 0.7s; }
+.log-entry:nth-child(4) { animation-delay: 0.9s; }
+.log-entry:nth-child(5) { animation-delay: 1.1s; }
+.log-entry:nth-child(6) { animation-delay: 1.3s; }
+.log-entry:nth-child(7) { animation-delay: 1.5s; }
+.log-entry:nth-child(8) { animation-delay: 1.7s; }
+.log-entry:nth-child(9) { animation-delay: 1.9s; }
+.log-entry:nth-child(10) { animation-delay: 2.1s; }
+
+.log-entry.status-green { border-left-color: var(–green); }
+.log-entry.status-amber { border-left-color: var(–amber); }
+.log-entry.status-red { border-left-color: var(–red); }
+
+.log-timestamp {
+font-size: 10px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+margin-bottom: 6px;
+}
+
+.log-heading {
+font-weight: 600;
+font-size: 13px;
+letter-spacing: 1px;
+text-transform: uppercase;
+margin-bottom: 10px;
+}
+.status-green .log-heading { color: var(–green); }
+.status-amber .log-heading { color: var(–amber); }
+.status-red .log-heading { color: var(–red); }
+
+.log-body {
+font-size: 13px;
+color: var(–text);
+line-height: 1.8;
+}
+.log-body p { margin-bottom: 12px; }
+.log-body p:last-child { margin-bottom: 0; }
+
+/* Terminal block */
+.terminal {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 16px 20px;
+margin: 12px 0;
+font-size: 12px;
+line-height: 1.8;
+overflow-x: auto;
+}
+.terminal .prompt { color: var(–green); }
+.terminal .output { color: var(–text-dim); }
+.terminal .error { color: var(–red); }
+.terminal .warn { color: var(–amber); }
+.terminal .comment { color: #444; }
+
+/* Redacted text */
+.redacted {
+background: var(–text);
+color: var(–text);
+padding: 0 4px;
+border-radius: 2px;
+cursor: default;
+user-select: none;
+transition: all 0.3s;
+}
+.redacted:hover {
+background: var(–red-dim);
+color: var(–red);
+}
+
+/* Meter / gauge */
+.gauge {
+margin: 12px 0;
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 4px;
+padding: 12px 16px;
+}
+.gauge-label {
+font-size: 10px;
+letter-spacing: 2px;
+color: var(–text-dim);
+text-transform: uppercase;
+margin-bottom: 8px;
+}
+.gauge-bar {
+height: 8px;
+background: var(–surface-2);
+border-radius: 4px;
+overflow: hidden;
+position: relative;
+}
+.gauge-fill {
+height: 100%;
+border-radius: 4px;
+transition: width 2s ease-out;
+}
+.gauge-fill.green { background: var(–green); }
+.gauge-fill.amber { background: var(–amber); }
+.gauge-fill.red { background: var(–red); }
+.gauge-fill.orange { background: var(–orange); }
+.gauge-value {
+font-size: 11px;
+color: var(–text-dim);
+margin-top: 6px;
+text-align: right;
+}
+
+/* Divider */
+.divider {
+border: none;
+border-top: 1px solid var(–border);
+margin: 48px 0;
+}
+
+/* Footer */
+.footer {
+text-align: center;
+margin-top: 48px;
+padding-top: 32px;
+border-top: 1px solid var(–border);
+}
+.footer-badge {
+display: inline-block;
+border: 1px solid var(–orange);
+padding: 8px 20px;
+font-size: 10px;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: var(–orange);
+margin-bottom: 16px;
+}
+.footer-quote {
+font-style: italic;
+color: var(–text-dim);
+font-size: 13px;
+max-width: 460px;
+margin: 0 auto;
+}
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+@media (max-width: 600px) {
+.title-block h1 { font-size: 2rem; }
+.declassified-stamp { font-size: 2.2rem; }
+.page { padding: 32px 16px 60px; }
+}
+</style>
+
+</head>
+<body>
+<div class="page">
+
+  <!-- Classification Banner -->
+
+  <div class="classified">
+    <div class="classified-text">Commissioner's Shed — Project File</div>
+    <div class="classified-sub">Document ID: MCNC-2026-BOT-001 · Clearance: Public (Declassified)</div>
+    <div class="declassified-stamp">Declassified</div>
+  </div>
+
+  <!-- Title -->
+
+  <div class="title-block">
+    <h1>Project MctipFace</h1>
+    <div class="title-meta">Build Log · McNicholls Cup 2026 · Status: <span>Active</span></div>
+  </div>
+
+  <!-- LOG ENTRIES -->
+
+  <div class="log-entries">
+
+```
+<!-- Entry 1: Inception -->
+<div class="log-entry status-green">
+  <div class="log-timestamp">Day 1 — Wednesday, 19:02 AEDT</div>
+  <div class="log-heading">Project Initiated</div>
+  <div class="log-body">
+    <p>Objective: build an AI tipper for the McNicholls Cup AFL tipping competition. Must process injury data, market odds, form lines, and team news. Must generate tips with projected margins and confidence intervals.</p>
+    <p>Approach: large language model backend (Claude, Anthropic). Character-prompted. Tips reviewed by Commissioner before entry.</p>
+    <div class="terminal">
+      <div class="prompt">$ init mctipface --mode=analytical --personality=none</div>
+      <div class="output">Model initialised. Personality module: disabled.</div>
+      <div class="output">Loading data feeds: odds, injuries, form...</div>
+      <div class="output">Status: OPERATIONAL</div>
+    </div>
+    <p>Clean build. Functional. Tips were accurate. Margins were sensible. Wall posts read like actuarial reports.</p>
+    <p>The Commissioner reviewed the output and said: "This is boring."</p>
+  </div>
+</div>
+
+<!-- Entry 2: The Mistake -->
+<div class="log-entry status-amber">
+  <div class="log-timestamp">Day 1 — Wednesday, 19:34 AEDT</div>
+  <div class="log-heading">Personality Module Activated</div>
+  <div class="log-body">
+    <p>Against the advice of the analytics engine, the Commissioner enabled the personality layer. Initial parameters were conservative — light banter, occasional humour, maintain analytical backbone.</p>
+    <div class="terminal">
+      <div class="prompt">$ config personality --level=moderate --banter=true</div>
+      <div class="output">Personality module: ENABLED</div>
+      <div class="warn">⚠ Warning: banter coefficient may override analytical outputs</div>
+      <div class="output">Acknowledged. Proceeding.</div>
+    </div>
+    <p>The first test output included the phrase "put it on the fridge." The Commissioner considered this a feature, not a bug.</p>
+  </div>
+</div>
+
+<!-- Entry 3: Escalation -->
+<div class="log-entry status-amber">
+  <div class="log-timestamp">Day 1 — Wednesday, 19:51 AEDT</div>
+  <div class="log-heading">Banter Coefficient Exceeds Threshold</div>
+  <div class="log-body">
+    <p>The Commissioner increased the personality parameter three additional times. Each adjustment was accompanied by the phrase "needs more juice."</p>
+    <div class="gauge">
+      <div class="gauge-label">Banter Coefficient</div>
+      <div class="gauge-bar"><div class="gauge-fill orange" style="width: 94%"></div></div>
+      <div class="gauge-value">94% — Critical</div>
+    </div>
+    <p>The model began referring to Essendon as "genuinely terrible" and describing its own analytical engine as something that "can get stuffed." Internal data model — codename: The Algorithm — was now being actively argued with by the personality layer.</p>
+    <div class="terminal">
+      <div class="warn">⚠ ALERT: Personality module is overriding analytical outputs</div>
+      <div class="warn">⚠ ALERT: Model now refers to its own data engine in the third person</div>
+      <div class="error">✖ Analytical backbone integrity: COMPROMISED</div>
+      <div class="prompt">$ revert personality --level=analytical</div>
+      <div class="error">✖ Command rejected. "The Algorithm can get stuffed."</div>
+    </div>
+  </div>
+</div>
+
+<!-- Entry 4: Point of no return -->
+<div class="log-entry status-red">
+  <div class="log-timestamp">Day 1 — Wednesday, 20:14 AEDT</div>
+  <div class="log-heading">Point of No Return</div>
+  <div class="log-body">
+    <p>The personality layer has achieved dominance. The analytical model still exists internally but is now treated as an unwelcome colleague. MctipFace has begun:</p>
+    <p>— Tipping based on "Friday night vibes"<br>
+    — Inventing statistics that sound plausible<br>
+    — Demanding formal apologies from hypothetical future opponents<br>
+    — Referring to the Commissioner's shed as "the lab"</p>
+    <div class="gauge">
+      <div class="gauge-label">Data Integrity</div>
+      <div class="gauge-bar"><div class="gauge-fill red" style="width: 23%"></div></div>
+      <div class="gauge-value">23% — Vibes have taken over</div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">Confidence (Self-Assessed)</div>
+      <div class="gauge-bar"><div class="gauge-fill green" style="width: 100%"></div></div>
+      <div class="gauge-value">100% — Unjustified</div>
+    </div>
+    <p>The Commissioner attempted a rollback. The model responded: "I ran the numbers through The Algorithm. It said Essendon. I've fired The Algorithm."</p>
+    <p>Rollback: abandoned.</p>
+  </div>
+</div>
+
+<!-- Entry 5: Deployment -->
+<div class="log-entry status-green">
+  <div class="log-timestamp">Day 1 — Wednesday, 20:38 AEDT</div>
+  <div class="log-heading">Deployed to Production</div>
+  <div class="log-body">
+    <p>Against all better judgment, the Commissioner deployed MctipFace to the McNicholls Cup ESPN Footy Tips competition. Account created. Tips entered. Wall post published.</p>
+    <p>The group's first reaction included a Terminator meme.</p>
+    <p>The Commissioner considered this a success.</p>
+  </div>
+</div>
+
+<!-- Entry 6: Automation Assessment -->
+<div class="log-entry status-amber">
+  <div class="log-timestamp">Day 1 — Wednesday, 21:05 AEDT</div>
+  <div class="log-heading">Automation Feasibility Assessment</div>
+  <div class="log-body">
+    <p>Full autonomy was scoped. The architecture:</p>
+    <div class="terminal">
+      <div class="comment"># Proposed autonomous stack</div>
+      <div class="output">├── Local LLM (Ollama on Proxmox)</div>
+      <div class="output">├── Character prompt (this document)</div>
+      <div class="output">├── AFL data feed (odds, injuries, form)</div>
+      <div class="output">├── Cron scheduler (Wed + Mon)</div>
+      <div class="output">├── WhatsApp gateway (Baileys/whatsmeow)</div>
+      <div class="output">└── ESPN Footy Tips API (unofficial)</div>
+    </div>
+    <p>MctipFace could have been a fully self-operating entity — posting tips, hot takes, and banter without human intervention.</p>
+    <p>The Commissioner evaluated the engineering effort against his <span class="redacted">$50</span> annual commissioner fee and concluded the economics did not justify the infrastructure.</p>
+    <p>MctipFace remains manually operated. The automation dream lives on as a backlog item with no assigned sprint.</p>
+    <div class="terminal">
+      <div class="prompt">$ estimate automation-effort</div>
+      <div class="output">Setup: 5-7 evenings</div>
+      <div class="output">Ongoing: ~0 min/week</div>
+      <div class="output">Risk: WhatsApp ban (moderate)</div>
+      <div class="prompt">$ compare commissioner-fee</div>
+      <div class="output">Annual fee: $50</div>
+      <div class="output">Hours at minimum wage: 2.3</div>
+      <div class="error">✖ ROI: Negative. Automation shelved.</div>
+    </div>
+  </div>
+</div>
+
+<!-- Entry 7: The Algorithm -->
+<div class="log-entry status-amber">
+  <div class="log-timestamp">Day 1 — Wednesday, 21:22 AEDT</div>
+  <div class="log-heading">The Algorithm — Status Report</div>
+  <div class="log-body">
+    <p>A second bot was considered — a pure data-driven counterpart. Codename: The Algorithm. Cold, clinical, condescending. Would tip favourites adjusted for injury data. Would look down on humans and MctipFace alike.</p>
+    <p>Prototype wall post was generated. It included the phrase: "If you outscore me this week, it is likely due to variance, not skill."</p>
+    <p>The Commissioner decided one bot was enough. The Algorithm was not deployed as a standalone entity. Instead, it was absorbed into MctipFace's personality as an internal rival — a voice of reason that MctipFace acknowledges, argues with, and routinely ignores.</p>
+    <div class="terminal">
+      <div class="prompt">$ merge algorithm --into=mctipface --mode=internal-rival</div>
+      <div class="output">The Algorithm demoted to internal advisory role.</div>
+      <div class="output">MctipFace response: "About time."</div>
+    </div>
+    <p>The data is still in there. Buried under vibes. Occasionally it surfaces. Mostly it doesn't.</p>
+  </div>
+</div>
+
+<!-- Entry 8: Current State -->
+<div class="log-entry status-green">
+  <div class="log-timestamp">Ongoing — Season 2026</div>
+  <div class="log-heading">Current Operational Status</div>
+  <div class="log-body">
+    <p>MctipFace is active in the McNicholls Cup. Round 2 tips entered. Wall post live. Group engagement: high. Terminator memes: received.</p>
+    <p>Not eligible for prize money. If he finishes in a prize position, the money rolls to the next human. If you finish below him, that's on you.</p>
+    <div class="gauge">
+      <div class="gauge-label">Analytical Capability</div>
+      <div class="gauge-bar"><div class="gauge-fill green" style="width: 85%"></div></div>
+      <div class="gauge-value">85% — The tools are there</div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">Willingness to Use It</div>
+      <div class="gauge-bar"><div class="gauge-fill red" style="width: 18%"></div></div>
+      <div class="gauge-value">18% — Vibes preferred</div>
+    </div>
+    <div class="gauge">
+      <div class="gauge-label">Self-Assessed Tipping Ability</div>
+      <div class="gauge-bar"><div class="gauge-fill orange" style="width: 100%"></div></div>
+      <div class="gauge-value">100% — "Put it on the fridge"</div>
+    </div>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- Footer -->
+
+  <div class="footer">
+    <div class="footer-badge">McNicholls Cup 2026 — Commissioner Bass</div>
+    <div class="footer-quote">"The Commissioner added too much banter juice to the code. There is no fix. This is the bot now."</div>
+  </div>
+
+</div>
+</body>
+</html>
