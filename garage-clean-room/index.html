@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Garage Clean Room — Project Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0f1a;
+    --bg-card: #111827;
+    --bg-deep: #060b14;
+    --bg-header: #0d1422;
+    --border: #1a2d47;
+    --border-light: #0f1a2a;
+    --accent: #4a9eff;
+    --accent-dim: #1a3a5f;
+    --green: #2ecc71;
+    --green-dim: #1a4a3a;
+    --text: #c8d6e5;
+    --text-bright: #e8f0fe;
+    --text-mid: #8aa0b8;
+    --text-dim: #5a7a9a;
+    --text-faint: #3a5a7a;
+    --mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', monospace;
+    --sans: 'IBM Plex Sans', -apple-system, sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--sans);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .header {
+    background: linear-gradient(135deg, #0a0f1a 0%, #1a2744 50%, #0d1926 100%);
+    border-bottom: 1px solid var(--border);
+    padding: 28px 20px 20px;
+  }
+  .container { max-width: 920px; margin: 0 auto; }
+  .header .label {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    letter-spacing: 3px; text-transform: uppercase; margin-bottom: 6px;
+  }
+  .header h1 { font-size: 28px; font-weight: 700; color: var(--text-bright); letter-spacing: -0.5px; margin-bottom: 4px; }
+  .header .subtitle { font-family: var(--mono); font-size: 13px; color: var(--text-dim); }
+  .summary {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px; background: var(--border); border-bottom: 1px solid var(--border);
+  }
+  .summary-item { background: var(--bg-header); padding: 14px 20px; font-size: 13px; }
+  .summary-item .val { color: var(--accent); font-weight: 600; font-family: var(--mono); }
+  .summary-item .lbl { color: var(--text-faint); font-size: 10px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 2px; }
+  .tab-bar {
+    background: var(--bg-header); border-bottom: 1px solid var(--border);
+    padding: 0 20px; position: sticky; top: 0; z-index: 10;
+    overflow-x: auto; -webkit-overflow-scrolling: touch;
+  }
+  .tab-bar .container { display: flex; gap: 0; }
+  .tab-btn {
+    background: none; color: var(--text-faint); border: none;
+    border-bottom: 2px solid transparent; padding: 12px 18px;
+    font-family: var(--mono); font-size: 12px; cursor: pointer;
+    white-space: nowrap; transition: all 0.15s;
+  }
+  .tab-btn:hover { color: var(--text-mid); }
+  .tab-btn.active { color: var(--accent); background: rgba(26,45,71,0.5); border-bottom-color: var(--accent); }
+  .content { padding: 20px 20px 60px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .phase-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 24px; }
+  @media (max-width: 600px) { .phase-grid { grid-template-columns: repeat(2, 1fr); } }
+  .phase-btn {
+    background: var(--bg-card); border: 1px solid var(--border); border-radius: 6px;
+    padding: 10px 10px; cursor: pointer; text-align: left; transition: all 0.15s;
+    font-family: var(--mono);
+  }
+  .phase-btn:hover { border-color: var(--accent-dim); }
+  .phase-btn.active { background: linear-gradient(135deg, #1a3a5f, #1a2d47); border-color: var(--accent); }
+  .phase-btn .num { font-size: 10px; color: var(--text-faint); margin-bottom: 2px; }
+  .phase-btn.active .num { color: var(--accent); }
+  .phase-btn .name { font-size: 12px; color: var(--text-dim); line-height: 1.3; }
+  .phase-btn.active .name { color: var(--text-bright); }
+  .phase-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 16px; flex-wrap: wrap; gap: 8px; }
+  .phase-header h2 { font-size: 20px; color: var(--text-bright); font-weight: 600; }
+  .time-badge {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    background: #0d1f3c; padding: 4px 10px; border-radius: 4px; border: 1px solid var(--accent-dim);
+  }
+  .sketch-box {
+    background: var(--bg-deep); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 20px; margin-bottom: 20px; overflow-x: auto;
+  }
+  .sketch-box .sketch-label {
+    font-family: var(--mono); font-size: 10px; color: var(--text-faint);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+  }
+  .sketch-box pre {
+    font-family: var(--mono); font-size: 10.5px; line-height: 1.35;
+    color: #7aafdf; margin: 0; white-space: pre;
+  }
+  .section-label {
+    font-family: var(--mono); font-size: 10px; color: var(--text-faint);
+    letter-spacing: 1px; text-transform: uppercase; margin-bottom: 10px;
+  }
+  .step { display: flex; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--bg-card); font-size: 13px; line-height: 1.5; }
+  .step-num { color: var(--accent); font-weight: 600; font-family: var(--mono); min-width: 22px; flex-shrink: 0; }
+  .step-text { color: #b0c8e0; }
+  .tip {
+    background: #0d1f2d; border: 1px solid var(--green-dim);
+    border-left: 3px solid var(--green); border-radius: 0 6px 6px 0;
+    padding: 12px 16px; margin: 16px 0 20px; font-size: 12px; line-height: 1.5;
+  }
+  .tip strong { color: var(--green); margin-right: 4px; }
+  .tip span { color: #8abfa0; }
+  .mat-list { background: var(--bg-card); border-radius: 6px; border: 1px solid var(--border); overflow: hidden; margin-top: 8px; }
+  .mat-row { display: flex; justify-content: space-between; padding: 8px 14px; border-bottom: 1px solid var(--border-light); font-size: 12px; }
+  .mat-row:last-child { border-bottom: none; }
+  .mat-row .mat-name { color: var(--text-mid); }
+  .mat-row .mat-qty { color: var(--accent); font-weight: 600; font-family: var(--mono); margin-left: 12px; white-space: nowrap; }
+  .shop-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 8px; }
+  .shop-header h2 { font-size: 20px; color: var(--text-bright); }
+  .shop-counter {
+    font-family: var(--mono); font-size: 12px; color: var(--accent);
+    background: #0d1f3c; padding: 6px 12px; border-radius: 4px; border: 1px solid var(--accent-dim);
+  }
+  .shop-counter.done { color: var(--green); border-color: var(--green-dim); }
+  .shop-intro {
+    background: var(--bg-header); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px 16px; margin-bottom: 24px; font-size: 12px; color: var(--text-dim); line-height: 1.5;
+  }
+  .shop-section-label {
+    font-family: var(--mono); font-size: 11px; color: var(--accent);
+    letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px;
+    padding-bottom: 6px; border-bottom: 1px solid var(--border);
+  }
+  .shop-section { margin-bottom: 24px; }
+  .shop-item {
+    display: grid; grid-template-columns: 28px 1fr auto auto;
+    gap: 10px; align-items: center; padding: 10px 8px;
+    border-bottom: 1px solid var(--border-light); cursor: pointer;
+    transition: opacity 0.15s; font-size: 12px; user-select: none;
+  }
+  .shop-item.checked { opacity: 0.35; }
+  .checkbox {
+    width: 18px; height: 18px; border-radius: 4px; border: 2px solid #2a4a6f;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; color: var(--bg); transition: all 0.15s;
+  }
+  .shop-item.checked .checkbox { background: var(--green); border-color: var(--green); }
+  .shop-item-name { color: #b0c8e0; }
+  .shop-item.checked .shop-item-name { text-decoration: line-through; }
+  .shop-item-aisle { font-size: 10px; color: var(--text-faint); margin-top: 2px; }
+  .shop-item-qty { color: var(--text-dim); white-space: nowrap; }
+  .shop-item-price { color: var(--accent); font-weight: 600; font-family: var(--mono); white-space: nowrap; min-width: 55px; text-align: right; }
+  .water-content p { margin-bottom: 14px; font-size: 13px; color: var(--text-mid); }
+  .water-content strong { color: var(--text-bright); }
+  .water-sidebar { padding: 0 0 0 16px; border-left: 2px solid var(--accent-dim); margin-top: 16px; }
+  .maint-row { display: grid; grid-template-columns: 140px 1fr; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--bg-card); font-size: 13px; }
+  @media (max-width: 500px) { .maint-row { grid-template-columns: 1fr; gap: 2px; } }
+  .maint-freq { color: var(--accent); font-size: 11px; font-weight: 600; font-family: var(--mono); padding-top: 2px; }
+  .maint-task { color: var(--text-mid); line-height: 1.5; }
+  .back-link {
+    display: inline-block; margin-top: 40px; padding: 8px 16px;
+    font-family: var(--mono); font-size: 12px; color: var(--text-faint);
+    border: 1px solid var(--border); border-radius: 4px; text-decoration: none; transition: all 0.15s;
+  }
+  .back-link:hover { color: var(--accent); border-color: var(--accent-dim); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="container">
+    <div class="label">project</div>
+    <h1>Garage Clean Room</h1>
+    <div class="subtitle">Sealed workspace &amp; man cave &middot; Canberra, ACT</div>
+  </div>
+</div>
+
+<div class="summary">
+  <div class="summary-item"><div class="lbl">Est. Cost</div><div class="val">$350&ndash;500</div></div>
+  <div class="summary-item"><div class="lbl">Time</div><div class="val">1&ndash;2 weekends</div></div>
+  <div class="summary-item"><div class="lbl">Enclosed Area</div><div class="val">~3.5m &times; 3m</div></div>
+  <div class="summary-item"><div class="lbl">Skill Level</div><div class="val">DIY / beginner</div></div>
+</div>
+
+<div class="tab-bar">
+  <div class="container">
+    <button class="tab-btn active" data-tab="phases">Build Phases</button>
+    <button class="tab-btn" data-tab="shopping">Bunnings List</button>
+    <button class="tab-btn" data-tab="water">Water Mgmt</button>
+    <button class="tab-btn" data-tab="maintenance">Maintenance</button>
+  </div>
+</div>
+
+<div class="content">
+  <div class="container">
+    <div id="tab-phases" class="tab-panel active">
+      <div class="phase-grid" id="phase-grid"></div>
+      <div id="phase-details"></div>
+    </div>
+    <div id="tab-shopping" class="tab-panel">
+      <div class="shop-header">
+        <h2>Bunnings Shopping List</h2>
+        <div class="shop-counter" id="shop-counter">0/0 items</div>
+      </div>
+      <div class="shop-intro">Tap items to check them off as you shop. Prices are approximate as of early 2026.</div>
+      <div id="shop-list"></div>
+    </div>
+    <div id="tab-water" class="tab-panel">
+      <h2 style="font-size:20px;color:var(--text-bright);margin-bottom:16px;">Water Management</h2>
+      <div class="sketch-box"><div class="sketch-label">Diagram</div><pre id="water-sketch"></pre></div>
+      <div class="water-content">
+        <p>Water enters via the tilt door on the left and flows right across the slab. The side door at the bottom-right corner is your natural drainage exit to the backyard.</p>
+        <div class="water-sidebar">
+          <p>The raised subfloor creates a <strong>40&ndash;50mm channel</strong> between the slab and your living surface.</p>
+          <p>Timber bearers run <strong>front-to-back</strong> (top-to-bottom on plan) so water flows freely between them left&rarr;right toward the side door.</p>
+          <p>The side door is deliberately <strong>outside the enclosure</strong> &mdash; between the plastic wall and gyprock wall &mdash; serving as the drainage exit.</p>
+          <p>A <strong>10&ndash;20mm gap</strong> between subfloor edges and walls prevents pooling.</p>
+          <p>After heavy rain, check under the subfloor. If water isn&rsquo;t draining, shim bearers to encourage flow toward the side door.</p>
+        </div>
+      </div>
+    </div>
+    <div id="tab-maintenance" class="tab-panel">
+      <h2 style="font-size:20px;color:var(--text-bright);margin-bottom:20px;">Ongoing Maintenance</h2>
+      <div id="maint-list"></div>
+    </div>
+    <a href="../" class="back-link">&larr; Back to dbbfamily.github.io</a>
+  </div>
+</div>
+
+<script>
+const PHASES=[{id:"prep",title:"1. Prep & Wall Sealing",time:"2\u20133 hrs",sketch:`FLOOR PLAN \u2014 orientation
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2510
+    \u2502                              \u2502 doors to  \u2502   \u2502
+    \u2502                              \u2502 house     \u2502   \u2502
+  TILT                             \u2502            \u2502 R \u2502
+  DOOR    MAIN GARAGE              \u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524 U \u2502
+  (car    (parking / storage)      \u2502            \u2502 M \u2502
+  entry)                           \u2502  CLEAN     \u2502 P \u2502
+    \u2502                              \u2502  ROOM     \u2502 U \u2502
+    \u2502    car sits here             \u2502  (this    \u2502 S \u2502
+    \u2502                              \u2502   zone)   \u2502   \u2502
+    \u2502                              \u2502           \u2502   \u2502
+    \u2502         \u2605 CLEAR THIS \u2192      \u2502  \u2605 SEAL  \u2502 w \u2502
+    \u2502         \u2605 SWEEP & HOSE      \u2502  \u2605 PATCH \u2502 a \u2502
+    \u2502         \u2605 DRY FULLY         \u2502           \u2502 l \u2502
+    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524  side   \u251c\u2500\u2500\u2500\u2518
+                                   \u2502  door   \u2502
+   plastic sheeting \u2503\u2503\u2503            \u2502  (yard) \u2502
+   gyprock wall \u2501\u2501\u2501               \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518`,
+steps:["Clear everything from the back (right-hand) section of the garage","Sweep the entire slab in that zone, then hose down and let dry fully","Inspect rendered block walls (top and bottom of enclosure) for cracks and gaps","Fill cracks with gap filler or render patch compound","Run silicone sealant along ALL wall-to-floor joints in the enclosure zone","Seal around any conduit, pipe, or cable penetrations with silicone","Optional: coat block walls with Bondall Hydrostop masonry sealer"],
+tip:"The gyprock wall (shared with rumpus/studio) is already waterproofed soundcheck gyprock \u2014 focus sealing on the rendered block walls at the top and bottom of the enclosure.",
+materials:[{item:"Silicone sealant \u2014 general purpose, clear",qty:"2\u20133 tubes"},{item:"Gap filler / render repair compound",qty:"1 tub"},{item:"Bondall Hydrostop masonry sealer (optional)",qty:"1 can"},{item:"Caulking gun",qty:"1"}]},
+
+{id:"floor",title:"2. Raised Floor System",time:"3\u20134 hrs",sketch:`FLOOR PLAN \u2014 bearer layout (top-down)
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2510
+    \u2502                              \u2502  bearers   \u2502   \u2502
+    \u2502                              \u2502  run \u2195     \u2502 g \u2502
+  TILT                             \u2502            \u2502 y \u2502
+  DOOR    MAIN GARAGE              \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550  \u2502 p \u2502
+    \u2502                              \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550  \u2502 r \u2502
+    \u2502     (no subfloor here)       \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550  \u2502 o \u2502
+    \u2502                              \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550  \u2502 c \u2502
+    \u2502                              \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550  \u2502 k \u2502
+    \u2502                              \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550  \u2502   \u2502
+    \u2502                              \u2502 \u2550\u2550\u2550\u2550\u2550\u2550\u2557   \u2502 w \u2502
+    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524 gap  \u2551side\u251c\u2500\u2500\u2500\u2524 a \u2502
+                                   \u2502  \u2193   \u2551door\u2502   \u2502 l \u2502
+    Bearers run TOP\u2194BOTTOM         \u2502water\u2551exit\u2502   \u2502 l \u2502
+    Water flows LEFT\u2192RIGHT         \u2514\u2500\u2500\u2500\u2500\u2500\u2568\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2518
+    between them \u2192 exits side door
+
+
+CROSS SECTION \u2014 looking from top wall down
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+  plastic                          gyprock
+  wall                             wall
+    \u2502                                \u2502
+    \u2502  \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510                 \u2502
+    \u2502  \u2502 rubber mat\u2502                 \u2502
+    \u2502  \u251c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524                 \u2502
+    \u2502  \u2502  plywood  \u2502                 \u2502
+    \u2502  \u251c\u2500\u252c\u2500\u252c\u2500\u252c\u2500\u252c\u2500\u2500\u2524                 \u2502
+    \u2502  \u2502\u2593\u2502 \u2502\u2593\u2502 \u2502\u2593 \u2502 \u2190 bearers      \u2502
+    \u2502\u2591\u2591\u2502\u2591\u2502\u2591\u2502\u2591\u2502\u2591\u2502\u2591\u2591\u2502\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2591\u2502
+    \u2502  \u255a\u2550\u2567\u2550\u2567\u2550\u2567\u2550\u2567\u2550\u2550\u255d   \u2190 gap      \u2502
+    \u2502      water flows \u2192   side door \u2502
+    \u2502                      \u2192 exits   \u2502`,
+steps:["Lay treated pine bearers (50\u00d750mm H3) on slab running TOP-TO-BOTTOM (front-to-back)","Space bearers approximately 400\u2013500mm apart","CRITICAL: Stop bearers short of the side door area so water exits freely","Place 12mm structural plywood sheets on top as subfloor deck","Screw plywood into bearers with 50mm countersunk screws","Leave 10\u201320mm gap between subfloor edge and all walls for drainage","Lay interlocking rubber/EVA mats on top \u2014 full coverage of enclosed area"],
+tip:"Water enters from the tilt door (left) and flows right across the slab. Bearers running front-to-back let water pass between them. The side door at the bottom-right is the natural exit \u2014 don\u2019t block it.",
+materials:[{item:"Treated pine 50\u00d750mm H3, 2.4m lengths",qty:"6\u20138"},{item:"Structural plywood 12mm, 2400\u00d71200mm",qty:"2\u20133 sheets"},{item:"Wood screws 50mm countersunk",qty:"1 box (100)"},{item:"Interlocking EVA/rubber mats",qty:"2\u20133 packs (~10m\u00b2)"}]},
+
+{id:"ceiling",title:"3. Ceiling Enclosure",time:"2\u20133 hrs",sketch:`CROSS SECTION \u2014 looking from tilt door toward gyprock
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+  \u250c\u2500 cliplock roof \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510
+  \u2502\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2592\u2502
+  \u2502                                             \u2502
+  \u2502     dust \u2193\u2193\u2193 falls from cliplock gaps        \u2502
+  \u2502                                             \u2502
+  \u2502   \u250c\u2500\u2500beam\u2500\u2500\u2510        \u250c\u2500\u2500beam\u2500\u2500\u2510            \u2502
+  \u2502   \u2502\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2502        \u2502\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2502            \u2502
+  \u2502\u2550\u2550\u2550\u256a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u256a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u256a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u256a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2502
+  \u2502   \u2191        \u2191        \u2191        \u2191            \u2502
+  \u2502   battens screwed OVER plastic into beams  \u2502
+  \u2502                                             \u2502
+  \u2502   \u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557        \u2502
+  \u2502   \u2551   PLASTIC CEILING (200\u03bc)    \u2551        \u2502
+  \u2502   \u2551   covers entire enclosure   \u2551        \u2502
+  \u2502   \u2551   sealed to walls at edges  \u2551        \u2502
+  \u2502   \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d        \u2502
+  \u2502        \u2713 dust blocked from above           \u2502
+  \u2502        \u2713 clean air below                    \u2502
+  \u2502                                             \u2502
+  \u2502  plastic wall  \u2190 enclosure \u2192  gyprock wall \u2502
+  \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518`,
+steps:["Identify timber beams running across the enclosure zone","Roll out 200\u03bc clear builder\u2019s plastic across the underside of beams","Start at the gyprock wall \u2014 staple one end, pull taut toward plastic wall, then staple","Use 10\u201314mm staples with a staple gun","Where sheets overlap: 150mm+ overlap, seal seam with duct tape","Fix timber battens (25\u00d750mm) over plastic at each beam \u2014 screw through into beam","Seal all edges where ceiling meets walls with silicone or duct tape"],
+tip:"The ceiling seal is your highest-impact step. Cliplock roof joints aren\u2019t sealed and dust constantly settles through. Battens prevent sag and look much cleaner than staples alone.",
+materials:[{item:"200\u03bc clear builder\u2019s plastic, 4m wide roll",qty:"1 roll"},{item:"Staple gun + 10\u201314mm staples",qty:"1 + refills"},{item:"Pine battens 25\u00d750mm, 2.4m",qty:"4\u20136"},{item:"Duct tape \u2014 heavy duty silver",qty:"1\u20132 rolls"},{item:"Wood screws 40mm",qty:"1 small box"}]},
+
+{id:"walls",title:"4. Walls & Entry",time:"2\u20133 hrs",sketch:`FLOOR PLAN \u2014 enclosure boundary
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2503\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2503\u2500\u2500\u2500\u2510
+    \u2502                              \u2503            \u2503   \u2502
+    \u2502                              \u2503            \u2503   \u2502
+  TILT                             \u2503  CLEAN     \u2503 g \u2502
+  DOOR    MAIN GARAGE              \u2503  ROOM      \u2503 y \u2502
+    \u2502                              \u2503            \u2503 p \u2502
+    \u2502    car parks here            \u2503  ceiling + \u2503 r \u2502
+    \u2502                              \u2503  top/bot  \u2503 o \u2502
+    \u2502                              \u2503  sealed   \u2503 c \u2502
+    \u2502                              \u2503            \u2503 k \u2502
+    \u2502                              \u2503 \u250a\u250aENTRY\u250a\u250a  \u2503   \u2502
+    \u2502                              \u2503 (strip   )\u2503 w \u2502
+    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2503 (curtain)\u251c\u2500\u2500\u2500\u2524 a \u2502
+                                   \u2503          \u2502   \u2502 l \u2502
+    \u2503\u2503\u2503 = plastic sheeting         \u2503   side   \u2502   \u2502 l \u2502
+    \u2588\u2588\u2588 = sealed top/bottom        \u2503   door   \u2502   \u2502   \u2502
+                                   \u2503   (yard)  \u2502   \u2502   \u2502
+                                   \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2518
+
+    Entry faces the main garage \u2014
+    walk through from car area
+    into the clean room.`,
+steps:["Hang 200\u03bc clear plastic from a timber beam, forming the wall between garage and clean room","This wall runs parallel to the gyprock wall \u2014 it\u2019s the yellow line from the floor plan","Staple along the top of the beam, let the sheet hang to the floor","Tuck the bottom edge under the subfloor or rubber mats for a base seal","Leave a ~1m wide gap for your entry point (facing the main garage)","Install PVC strip curtain in the entry gap \u2014 fix strips to a batten on the beam","Alternative: adhesive zip-door kit on the plastic","Seal junctions where plastic wall meets the top and bottom rendered block walls","Side door stays OUTSIDE the enclosure \u2014 between plastic and gyprock"],
+tip:"PVC strip curtain is the best entry \u2014 walk through hands-free while carrying bins. The entry faces the main garage so you walk straight in from the car/storage area.",
+materials:[{item:"PVC strip curtain kit (~1m wide)",qty:"1"},{item:"OR zip door kit (dust barrier type)",qty:"1"},{item:"Timber batten for curtain mount",qty:"1 \u00d7 1.2m"}]},
+
+{id:"air",title:"5. Air Management",time:"30 min",sketch:`CROSS SECTION \u2014 positive pressure (looking from top wall)
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+  plastic                        gyprock
+  wall                           wall
+    \u2502                              \u2502
+    \u2502  ceiling plastic \u2550\u2550\u2550\u2550\u2550\u2550\u2550   \u2502
+    \u2502                              \u2502
+    \u2502   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510              \u2502
+    \u2502   \u2502  BOX FAN  \u2502 \u2190 HIGH     \u2502
+    \u2502   \u2502 + FILTER \u2502   on shelf  \u2502
+    \u2502   \u2514\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2518              \u2502
+    \u2502        \u2502                     \u2502
+    \u2502 dusty  \u2502  clean              \u2502
+    \u2502 air IN \u2502  air OUT            \u2502
+    \u2502 thru   \u2502  into room          \u2502
+    \u2502 filter \u2193                      \u2502
+    \u2502        \u2502   \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510     \u2502
+    \u2502        \u2193   \u2502workspace\u2502     \u2502
+    \u2502            \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518     \u2502
+    \u2502  \u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550   \u2502
+    \u2502       subfloor              \u2502
+
+
+  HOW IT WORKS:
+
+  GARAGE         FILTER        CLEAN ROOM
+  (dusty)  \u2550\u2550\u2550\u25ba  \u250a\u250a\u250a\u250a\u250a  \u2550\u2550\u2550\u25ba (clean)
+                 \u250a\u250a\u250a\u250a\u250a
+           dust  \u250a\u250a\u250a\u250a\u250a  clean air pushes
+           gets  \u250a\u250a\u250a\u250a\u250a  OUT through gaps
+           caught\u250a\u250a\u250a\u250a\u250a  = positive pressure`,
+steps:["Tape a furnace/HVAC filter (MERV 8\u201311) to the INTAKE side of a box fan","Place the fan inside the enclosure, drawing air from the garage through the filter","Mount or place the fan HIGH \u2014 on a shelf or bracket near the plastic wall","Point clean output air inward toward the gyprock wall / workspace","Run it when using the space \u2014 doesn\u2019t need to be on 24/7"],
+tip:"For man cave mode, a quiet pedestal fan with a filter behind it is less noisy. Upgrade to a Carbatec ceiling air filter ($150\u2013$250) later for something permanent.",
+materials:[{item:"Box fan 50cm (or pedestal fan)",qty:"1"},{item:"Furnace/HVAC filter MERV 8\u201311",qty:"1"}]},
+
+{id:"finish",title:"6. Man Cave Finishing",time:"Ongoing",sketch:`FLOOR PLAN \u2014 finished layout idea
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2510
+    \u2502                      \u2503 \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2510 \u2502     \u2502
+    \u2502                      \u2503 \u2502 work desk \u2502 \u2502     \u2502
+    \u2502                      \u2503 \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2518 \u2502  g  \u2502
+  TILT   MAIN GARAGE       \u2503                \u2502  y  \u2502
+  DOOR                     \u2503 \u250c\u2500\u2500\u2500\u2500\u2510 \u250c\u2500\u2500\u2500\u2500\u2510\u2502  p  \u2502
+    \u2502    car parks         \u2503 \u2502fan+\u2502 \u2502bins\u2502\u2502  r  \u2502
+    \u2502    here              \u2503 \u2514\u2500\u2500\u2500\u2500\u2518 \u2514\u2500\u2500\u2500\u2500\u2518\u2502  o  \u2502
+    \u2502                      \u2503 \u2554\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2557\u2502  c  \u2502
+    \u2502                      \u2503 \u2551 RUG ZONE  \u2551\u2502  k  \u2502
+    \u2502                      \u2503 \u2551 chair     \u2551\u2502     \u2502
+    \u2502                      \u2503 \u2551 TV on     \u2551\u2502  w  \u2502
+    \u2502                      \u2503 \u2551 gyprock   \u2551\u2502  a  \u2502
+    \u2502                      \u2503 \u2551 + heater  \u2551\u2502  l  \u2502
+    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2503 \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d\u251c\u2500\u2500\u2500\u2500\u2500\u2524 l  \u2502
+                            \u2503     side    \u2502     \u2502
+                            \u2503     door    \u2502     \u2502
+                            \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2500\u2500\u2518`,
+steps:["LED batten or strip lights along ceiling beams inside enclosure","Panel heater on gyprock wall \u2014 warms sealed ~10m\u00b2 space quickly","TV/monitor bracket on gyprock wall (soundcheck gyprock is solid)","Trestle desk or wall-mounted fold-down bench for workspace","Sealed clear storage bins stacked along one wall","Large washable area rug / outdoor carpet over mats in lounge zone","Wall-mounted shelving on gyprock for extra storage"],
+tip:"Outdoor rugs are ideal \u2014 durable, washable, won\u2019t get mouldy. The enclosed space will feel surprisingly cosy once sealed and heated. TV mounts straight onto the gyprock.",
+materials:[{item:"LED batten light or strip lights",qty:"1\u20132"},{item:"TV wall bracket (gyprock rated)",qty:"1"},{item:"Outdoor area rug / washable carpet",qty:"1 large"},{item:"Clear sealed storage bins",qty:"as needed"},{item:"Trestle table or fold-down bench",qty:"1"}]}
+];
+
+const SHOP_DATA=[
+{section:"Sealing & Patching",items:[{item:"Silicone sealant \u2014 general purpose, clear",qty:"2\u20133 tubes",price:"$8 ea",aisle:"Selleys / Parfix aisle"},{item:"Gap filler / render repair compound",qty:"1 tub",price:"$12",aisle:"Fillers & patching"},{item:"Caulking gun",qty:"1",price:"$8\u201315",aisle:"Paint accessories"},{item:"Duct tape \u2014 heavy duty silver",qty:"1\u20132 rolls",price:"$8 ea",aisle:"Tapes aisle"}]},
+{section:"Sub-floor",items:[{item:"Treated pine 50\u00d750mm H3, 2.4m",qty:"6\u20138 lengths",price:"~$6 ea",aisle:"Timber yard / treated pine"},{item:"Structural plywood 12mm, 2400\u00d71200mm",qty:"2\u20133 sheets",price:"~$35 ea",aisle:"Sheet timber"},{item:"Wood screws 50mm countersunk",qty:"1 box (100)",price:"$12",aisle:"Fasteners"}]},
+{section:"Enclosure \u2014 Plastic & Framing",items:[{item:"Builder\u2019s plastic 200\u03bc, 4m wide (heavy duty clear)",qty:"1 roll",price:"$55\u201380",aisle:"Building supplies / plastic sheeting"},{item:"Staple gun + 10\u201314mm staples",qty:"1 + refills",price:"$25",aisle:"Hand tools"},{item:"Pine battens 25\u00d750mm, 2.4m",qty:"4\u20136",price:"~$4 ea",aisle:"Timber / mouldings"},{item:"Wood screws 40mm",qty:"1 small box",price:"$8",aisle:"Fasteners"}]},
+{section:"Entry",items:[{item:"PVC strip curtain kit (~1m wide)",qty:"1",price:"$40\u201380",aisle:"May need to order online"},{item:"OR zip door kit (dust barrier type)",qty:"1",price:"$15\u201320",aisle:"Paint / renovation aisle"}]},
+{section:"Floor Finish",items:[{item:"Interlocking EVA/rubber mats (gym/garage type)",qty:"2\u20133 packs (~10m\u00b2)",price:"$25/pack",aisle:"Flooring / garage storage"}]},
+{section:"Air Management",items:[{item:"Box fan 50cm",qty:"1",price:"$30",aisle:"Fans / cooling"},{item:"Furnace/HVAC filter MERV 8\u201311",qty:"1",price:"$15",aisle:"Heating / filters"}]}
+];
+
+const MAINT_DATA=[
+{freq:"Every 2\u20133 months",task:"Replace the furnace/HVAC filter (or when visibly clogged)"},
+{freq:"Every few months",task:"Wipe down plastic walls and ceiling with a damp cloth"},
+{freq:"Seasonally",task:"Check silicone seals \u2014 Canberra temperature swings expand/contract materials"},
+{freq:"Annually",task:"Pull up rubber mats, sweep/mop the plywood subfloor underneath"},
+{freq:"After heavy rain",task:"Inspect under subfloor \u2014 ensure drainage path to side door is clear"},
+{freq:"Every 1\u20132 years",task:"Check plastic for brittleness/tears (UV degrades it) \u2014 replace sections as needed"},
+{freq:"As needed",task:"Re-silicone any seals that have cracked or pulled away"}
+];
+
+const WATER_SKETCH=`FLOOR PLAN \u2014 water flow path
+\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u2550
+
+    \u250c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u252c\u2500\u2500\u2500\u2510
+    \u2502                              \u2502            \u2502   \u2502
+    \u2502  water enters                \u2502  CLEAN     \u2502   \u2502
+  TILT from tilt door \u2500\u2500\u2192         \u2502  ROOM      \u2502 g \u2502
+  DOOR                   \u2500\u2500\u2192    \u2502  (raised   \u2502 y \u2502
+    \u2502                      \u2500\u2500\u2192  \u2502  subfloor) \u2502 p \u2502
+    \u2502  water flows across     \u2500\u2500\u2192\u2502           \u2502 r \u2502
+    \u2502  slab left \u2192 right        \u2192\u2502  water     \u2502 o \u2502
+    \u2502                            \u2502  flows     \u2502 c \u2502
+    \u2502                            \u2502  UNDER    \u2502 k \u2502
+    \u2502                            \u2502  subfloor \u2502   \u2502
+    \u2502                            \u2502     \u2193     \u2502 w \u2502
+    \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2524     \u2193 side\u251c\u2500\u2500\u2500\u2524 a \u2502
+                                   \u2502     \u2514\u2500\u2192 \u2190\u2500\u2502   \u2502 l \u2502
+                                   \u2502      EXITS \u2502   \u2502 l \u2502
+                                   \u2514\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2534\u2500\u2500\u2500\u2518
+
+KEY DESIGN DECISIONS:
+\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501\u2501
+
+  \u2713 Bearers run FRONT-TO-BACK (top\u2194bottom)
+    Water passes between them left\u2192right
+
+  \u2713 Side door at bottom-right is OUTSIDE enclosure
+    Natural drainage exit to backyard
+
+  \u2713 10-20mm gap at all subfloor edges
+    Water doesn\u2019t pool against walls
+
+  \u2713 Bearers stop SHORT of side door
+    Unobstructed exit path
+
+  \u2713 Gyprock wall already waterproofed
+    Prevents ingress into studio/rumpus
+
+  \u2713 Raised subfloor = 40-50mm clearance
+    Water passes underneath, clean room stays dry`;
+
+// ═══════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════
+let activePhase=0;
+const checkedItems={};
+
+function renderPhases(){
+  const grid=document.getElementById('phase-grid');
+  const details=document.getElementById('phase-details');
+  grid.innerHTML=PHASES.map((p,i)=>`
+    <button class="phase-btn ${i===activePhase?'active':''}" data-phase="${i}">
+      <div class="num">Phase ${i+1}</div>
+      <div class="name">${p.title.replace(/^\d+\.\s*/,'')}</div>
+    </button>`).join('');
+  const phase=PHASES[activePhase];
+  details.innerHTML=`
+    <div class="phase-header"><h2>${phase.title}</h2><span class="time-badge">\u23f1 ${phase.time}</span></div>
+    <div class="sketch-box"><div class="sketch-label">Diagram</div><pre>${phase.sketch}</pre></div>
+    <div style="margin-bottom:20px"><div class="section-label">Steps</div>
+    ${phase.steps.map((s,i)=>`<div class="step"><span class="step-num">${i+1}.</span><span class="step-text">${s}</span></div>`).join('')}</div>
+    <div class="tip"><strong>TIP</strong> <span>${phase.tip}</span></div>
+    <div><div class="section-label">Materials for this phase</div><div class="mat-list">
+    ${phase.materials.map(m=>`<div class="mat-row"><span class="mat-name">${m.item}</span><span class="mat-qty">${m.qty}</span></div>`).join('')}
+    </div></div>`;
+  grid.querySelectorAll('.phase-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{activePhase=parseInt(btn.dataset.phase);renderPhases();});
+  });
+}
+
+function renderShopping(){
+  const list=document.getElementById('shop-list');
+  let totalItems=0;
+  list.innerHTML=SHOP_DATA.map((section,si)=>`
+    <div class="shop-section"><div class="shop-section-label">${section.section}</div>
+    ${section.items.map((item,ii)=>{const key=`${si}-${ii}`;totalItems++;const checked=checkedItems[key];return`
+      <div class="shop-item ${checked?'checked':''}" data-key="${key}">
+        <div class="checkbox">${checked?'\u2713':''}</div>
+        <div><div class="shop-item-name">${item.item}</div><div class="shop-item-aisle">${item.aisle}</div></div>
+        <div class="shop-item-qty">${item.qty}</div>
+        <div class="shop-item-price">${item.price}</div>
+      </div>`;}).join('')}</div>`).join('');
+  const cc=Object.values(checkedItems).filter(Boolean).length;
+  const ctr=document.getElementById('shop-counter');
+  ctr.textContent=`${cc}/${totalItems} items`;
+  ctr.className=cc===totalItems?'shop-counter done':'shop-counter';
+  list.querySelectorAll('.shop-item').forEach(el=>{
+    el.addEventListener('click',()=>{checkedItems[el.dataset.key]=!checkedItems[el.dataset.key];renderShopping();});
+  });
+}
+
+function renderMaintenance(){
+  document.getElementById('maint-list').innerHTML=MAINT_DATA.map(m=>`
+    <div class="maint-row"><span class="maint-freq">${m.freq}</span><span class="maint-task">${m.task}</span></div>`).join('');
+}
+
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.dataset.tab).classList.add('active');
+  });
+});
+
+document.getElementById('water-sketch').textContent=WATER_SKETCH;
+renderPhases();renderShopping();renderMaintenance();
+</script>
+</body>
+</html>
