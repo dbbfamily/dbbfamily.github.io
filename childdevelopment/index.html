@@ -1,660 +1,544 @@
-import { useState } from “react”;
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How Kids Think</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    min-height: 100vh;
+    background: #FAFAF8;
+    font-family: Georgia, 'Times New Roman', serif;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+  }
+  .header {
+    background: linear-gradient(135deg, #2C3E50 0%, #34495E 50%, #2C3E50 100%);
+    padding: 32px 24px 20px;
+    color: white;
+  }
+  .header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    font-family: Georgia, serif;
+  }
+  .header p {
+    margin-top: 6px;
+    font-size: 13px;
+    opacity: 0.7;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+  }
+  .tabs {
+    display: flex;
+    overflow-x: auto;
+    background: #2C3E50;
+    gap: 0;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    flex: 0 0 auto;
+    padding: 10px 16px;
+    border: none;
+    border-bottom: 3px solid transparent;
+    background: transparent;
+    color: rgba(255,255,255,0.5);
+    font-size: 13px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 400;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .tab-btn.active {
+    border-bottom-color: #E67E22;
+    background: rgba(255,255,255,0.08);
+    color: #fff;
+    font-weight: 600;
+  }
+  .content {
+    padding: 20px 16px;
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .summary-card {
+    background: white;
+    border-radius: 8px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    border-left: 4px solid #E67E22;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .summary-card p {
+    font-size: 15px;
+    line-height: 1.65;
+    color: #2C3E50;
+  }
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  @media (max-width: 540px) {
+    .two-col { grid-template-columns: 1fr; }
+  }
+  .col-card {
+    background: white;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+  .col-card h3 {
+    margin-bottom: 12px;
+    font-size: 12px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+  }
+  .col-card h3.green { color: #27AE60; }
+  .col-card h3.red { color: #C0392B; }
+  .col-item {
+    margin-bottom: 8px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #444;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding-left: 12px;
+    position: relative;
+  }
+  .col-item .dot {
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+  }
+  .col-item .dot.green { color: #27AE60; }
+  .col-item .dot.red { color: #C0392B; }
+
+.strategies-card {
+background: white;
+border-radius: 8px;
+padding: 16px 20px;
+margin-bottom: 16px;
+box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.section-label {
+margin-bottom: 14px;
+font-size: 12px;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+color: #2C3E50;
+}
+.strategy-item {
+padding: 12px 14px;
+margin-bottom: 8px;
+background: #FAFAF8;
+border-radius: 6px;
+cursor: pointer;
+transition: all 0.15s ease;
+border: 1px solid #ECECEA;
+}
+.strategy-item.expanded {
+background: #FDF6EE;
+border-color: #E67E22;
+}
+.strategy-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+.strategy-title {
+font-size: 14px;
+font-weight: 600;
+color: #2C3E50;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
+}
+.strategy-arrow {
+font-size: 11px;
+color: #999;
+transition: transform 0.2s ease;
+}
+.strategy-item.expanded .strategy-arrow {
+transform: rotate(180deg);
+}
+.strategy-detail {
+display: none;
+margin-top: 10px;
+font-size: 13px;
+line-height: 1.6;
+color: #555;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
+}
+.strategy-item.expanded .strategy-detail {
+display: block;
+}
+
+.scenario-card {
+background: white;
+border-radius: 8px;
+padding: 16px 20px;
+margin-bottom: 24px;
+box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+}
+.scenario-label {
+font-size: 15px;
+font-weight: 600;
+color: #2C3E50;
+margin-bottom: 14px;
+}
+.scenario-bad {
+padding: 12px 14px;
+background: #FDEDEC;
+border-radius: 6px;
+margin-bottom: 8px;
+border-left: 3px solid #C0392B;
+}
+.scenario-good {
+padding: 12px 14px;
+background: #EAFAF1;
+border-radius: 6px;
+border-left: 3px solid #27AE60;
+}
+.scenario-tag {
+font-size: 11px;
+font-weight: 700;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+.scenario-tag.red { color: #C0392B; }
+.scenario-tag.green { color: #27AE60; }
+.scenario-text {
+margin-top: 6px;
+font-size: 13px;
+line-height: 1.55;
+color: #555;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
+}
+.footer {
+text-align: center;
+font-size: 11px;
+color: #AAA;
+font-family: -apple-system, BlinkMacSystemFont, ‘Segoe UI’, sans-serif;
+margin-bottom: 32px;
+}
+</style>
+
+</head>
+<body>
+
+<div class="header">
+  <h1>How Kids Think</h1>
+  <p>What they can do, what they can't yet, and what actually works</p>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="content" id="content"></div>
+
+<script>
 const data = {
-“1-2”: {
-label: “1–2 years”,
-emoji: “🧸”,
-summary: “Exploring everything. Limited words but understands far more than they can say. Frustration is the main challenge because their body and desires outpace their language.”,
-cognitive: [
-“Understands simple instructions ("give me the ball", "come here")”,
-“Learns through cause and effect — drops things, pushes buttons, watches reactions”,
-“Begins to recognise routines and anticipate what comes next”,
-“Points to communicate wants before words arrive”,
-“Starting to use 2–3 word phrases toward age 2”,
-],
-cannotYet: [
-“Follow multi-step instructions reliably”,
-“Understand "why" something is off-limits”,
-“Share or take turns (no concept of fairness yet)”,
-“Regulate frustration — meltdowns are neurological, not behavioural”,
-“Understand time ("later", "tomorrow" mean nothing)”,
-],
-strategies: [
-{
-title: “Use 2–4 word sentences”,
-detail: “Match their language level. "Shoes on" works. "We need to put your shoes on because we’re going outside" doesn’t land.”,
-},
-{
-title: “Narrate what you’re doing”,
-detail: “"Cutting banana. Here you go." This builds vocabulary and helps them predict what’s happening.”,
-},
-{
-title: “Offer two choices, not open questions”,
-detail: “"Apple or banana?" not "What do you want?" Open questions overwhelm them.”,
-},
-{
-title: “Redirect, don’t lecture”,
-detail: “If they’re doing something unsafe, physically move them and say what TO do: "Feet on the floor" instead of "Don’t climb."”,
-},
-{
-title: “Name their emotions for them”,
-detail: “"You’re frustrated because the block won’t fit." They can’t label feelings yet — you’re teaching them the vocabulary.”,
-},
-{
-title: “Expect repetition — lots of it”,
-detail: “They need to hear and practise things dozens of times. This isn’t defiance, it’s how the brain wires at this age.”,
-},
-],
-works: {
-label: “Frustration / meltdown”,
-good: “Stay calm, get close, name the feeling: "You’re upset. I know." Wait it out. Offer a hug or distraction once the wave passes.”,
-bad: “Reasoning with them mid-meltdown, raising your voice, or expecting them to "use their words" when they’re flooded.”,
-},
-},
-“2-3”: {
-label: “2–3 years”,
-emoji: “🚀”,
-summary: “Language is exploding. They want autonomy but can’t handle the consequences. "No" and "mine" are their favourite words. They’re testing every boundary — not to be defiant, but to learn where the edges are.”,
-cognitive: [
-“Vocabulary expanding rapidly — 50 words at 2, 200+ by 3”,
-“Starting to string together longer phrases and short sentences”,
-“Understands simple instructions and can follow 2-step directions”,
-“Beginning parallel play — playing alongside, not yet with, other kids”,
-“Strong sense of routine; gets upset when things change unexpectedly”,
-“Starting to assert preferences and independence ("I do it!")”,
-],
-cannotYet: [
-“Understand another person’s perspective or feelings”,
-“Share willingly (still purely egocentric — this is normal)”,
-“Wait or delay gratification for more than a few seconds”,
-“Understand consequences beyond the immediate moment”,
-“Control impulses even when they know the rule”,
-“Process long explanations or abstract reasoning”,
-],
-strategies: [
-{
-title: “Give them micro-autonomy”,
-detail: “Let them "help" — carry a spoon, press the lift button, choose between two shirts. This satisfies the drive for independence without the chaos.”,
-},
-{
-title: “State expectations before transitions”,
-detail: “"Two more minutes then bath time." They can’t handle sudden switches. Warnings prevent meltdowns.”,
-},
-{
-title: “Use positive instructions”,
-detail: “"Walk" not "Don’t run." "Gentle hands" not "Stop hitting." Their brain processes the action word — if you say "don’t run" they hear "run."”,
-},
-{
-title: “Validate then redirect”,
-detail: “"You want the red cup. The red cup is dirty. Here’s the blue cup." Skipping validation = escalation.”,
-},
-{
-title: “Keep rules few and consistent”,
-detail: “3–4 non-negotiable rules max. Everything else is a preference. Consistency matters more than strictness.”,
-},
-{
-title: “When frustrated, help them find words”,
-detail: “"Are you angry because she took your truck? Say: ‘my turn’." You’re scripting social language they’ll use later.”,
-},
-],
-works: {
-label: “"No!" to everything / defiance”,
-good: “Pick your battles. Offer choices where possible. For non-negotiables, stay calm and follow through without drama: "I hear you don’t want to. It’s time anyway."”,
-bad: “Getting into power struggles, repeating yourself louder, or taking the "no" personally. They’re practising autonomy, not attacking you.”,
-},
-},
-“3-4”: {
-label: “3–4 years”,
-emoji: “🎨”,
-summary: “Imagination is in full swing. They ask "why" constantly. They’re starting to understand rules exist but not why they apply to them. Social play is emerging — and so are social conflicts.”,
-cognitive: [
-“Speaks in full sentences, tells simple stories”,
-“Asks "why" about everything (genuine curiosity, not defiance)”,
-“Starts understanding basic rules of games and social situations”,
-“Developing imagination — pretend play, imaginary friends”,
-“Beginning to recognise others have feelings, but can’t consistently act on it”,
-“Can follow 2–3 step instructions”,
-],
-cannotYet: [
-“Consistently see things from another person’s viewpoint”,
-“Understand social hierarchies or authority as a concept”,
-“Regulate emotions independently — still needs co-regulation from adults”,
-“Distinguish between intentional and accidental actions”,
-“Understand abstract ideas like "respect" or "responsibility"”,
-“Reliably apply rules across different contexts”,
-],
-strategies: [
-{
-title: “Answer the "why" questions”,
-detail: “Even short answers build trust and critical thinking. "Because it’s hot and it’ll hurt your hand" is enough. You don’t need a lecture.”,
-},
-{
-title: “Use "when/then" instead of threats”,
-detail: “"When you put your shoes on, then we can go to the park" is motivating. "If you don’t put shoes on we’re not going" is threatening. Same outcome, different wiring.”,
-},
-{
-title: “Coach social situations in real time”,
-detail: “"She’s crying because you took her toy. How do you think she feels?" Start planting perspective-taking seeds even though it won’t be consistent yet.”,
-},
-{
-title: “Give them a role”,
-detail: “"You’re my helper today" or "Can you show Grandpa how we do it?" They respond to responsibility better than instructions.”,
-},
-{
-title: “Repair after conflict”,
-detail: “Come back once everyone is calm: "That was hard. You felt angry and I felt frustrated. We’re okay now." This teaches that conflict doesn’t break relationships.”,
-},
-{
-title: “Don’t expect consistency”,
-detail: “They’ll follow a rule perfectly one day and break it the next. That’s normal — the neural pathways aren’t hardened yet. Repetition is the only path.”,
-},
-],
-works: {
-label: “Talking back / copying adult behaviour”,
-good: “"I hear you, but let the grown-ups handle it. Why don’t you go do X?" Acknowledge, redirect, move on. Brief, warm, clear.”,
-bad: “Long speeches about respect, sitting them down for an adult conversation, or using words they can’t understand. They’ll just feel bad without learning anything.”,
-},
-},
-“4-5”: {
-label: “4–5 years”,
-emoji: “⭐”,
-summary: “Socially aware and emotionally perceptive. Can be surprisingly strategic — they know which buttons to press. This looks like adult reasoning but it’s pattern recognition, not moral understanding. They’re copying, not comprehending.”,
-cognitive: [
-“Pattern recognition — "if I do X, Y happens" — applied to social situations”,
-“Can identify emotions in others and sometimes respond to them”,
-“Understands and can follow rules, but inconsistently”,
-“Developing early empathy — comforting a crying friend, feeling guilt”,
-“Negotiating, bargaining, and testing limits with increasing sophistication”,
-“Beginning to understand past and future, but still very present-focused”,
-],
-cannotYet: [
-“Understand WHY rules exist (follows them because of consequences, not principles)”,
-“Reliably take another person’s perspective under emotional pressure”,
-“Grasp abstract concepts: respect, authority, fairness as principles”,
-“Manage emotional flooding — when overwhelmed, higher thinking shuts down”,
-“Understand that the same behaviour can be okay in one context and not another”,
-“Process complex or lengthy verbal reasoning from adults”,
-],
-strategies: [
-{
-title: “Don’t mistake cleverness for maturity”,
-detail: “She can read a room and influence people. That’s intelligence, not moral reasoning. She still needs simple, clear, age-appropriate guidance.”,
-},
-{
-title: “Engage their problem-solving”,
-detail: “"What do you think we should do?" gives them agency and practises the thinking you actually want them to develop.”,
-},
-{
-title: “Keep corrections to 5–10 words”,
-detail: “Their processing buffer is small. Long explanations get lost. "We don’t say it like that. Try again." is more effective than a paragraph.”,
-},
-{
-title: “Model the behaviour, don’t just demand it”,
-detail: “If you want them to say please, say it yourself consistently. They learn from watching, not from being told.”,
-},
-{
-title: “Use natural consequences where safe”,
-detail: “"If you throw the toy, I’ll put it away" — then follow through calmly. This teaches cause and effect better than any lecture.”,
-},
-{
-title: “Protect the relationship over winning the moment”,
-detail: “Connection before correction. A child who feels safe with you will accept guidance. A child who feels judged will shut down or fight back.”,
-},
-],
-works: {
-label: “Strategic behaviour / "manipulation"”,
-good: “Name it neutrally: "I can see you really want X. The answer is still no, but let’s find something else." Don’t punish cleverness — redirect it.”,
-bad: “Calling them manipulative, shaming the behaviour, or assuming malicious intent. They’re practising social skills. Clumsily, but that’s how it starts.”,
-},
-},
-“5-7”: {
-label: “5–7 years”,
-emoji: “📚”,
-summary: “The age of reason is beginning — slowly. They’re starting to understand fairness, rules, and other people’s perspectives, but it’s fragile and inconsistent. Peer relationships become central. They care deeply about what’s "fair."”,
-cognitive: [
-“Beginning genuine perspective-taking ("How would you feel if…" starts working)”,
-“Understanding rules as applying to everyone, not just themselves”,
-“Developing a sense of fairness and justice (often rigid — "that’s not fair!")”,
-“Can follow multi-step instructions and explain their reasoning”,
-“Growing ability to wait, share, and take turns genuinely”,
-“Starting to understand that actions have broader consequences”,
-],
-cannotYet: [
-“Think abstractly or hypothetically with consistency”,
-“Fully regulate emotions under stress (still developing until mid-20s)”,
-“Navigate complex social dynamics independently”,
-“Understand nuance — rules feel black and white”,
-“Separate intent from outcome reliably ("he meant to!")”,
-],
-strategies: [
-{
-title: “Start reasoning with them — briefly”,
-detail: “"We don’t do that because it hurts people’s feelings" now actually registers. Keep it to one sentence of reasoning, not a lecture.”,
-},
-{
-title: “Involve them in rule-making”,
-detail: “"What should the rule be about screen time?" They’ll often be stricter than you. Buy-in comes from participation.”,
-},
-{
-title: “Use their sense of fairness”,
-detail: “"Would it be fair if someone did that to you?" This lands now in a way it didn’t at 4.”,
-},
-{
-title: “Allow more independence with a safety net”,
-detail: “Let them resolve minor conflicts with peers before stepping in. Coach afterwards: "What worked? What would you do differently?"”,
-},
-{
-title: “Acknowledge their growing maturity”,
-detail: “"I noticed you waited your turn — that was really mature." Specific praise reinforces the exact behaviour you want to see more of.”,
-},
-],
-works: {
-label: “"That’s not fair!"”,
-good: “Take it seriously: "I hear you. Here’s why I made that decision." A short explanation respects their growing ability to reason.”,
-bad: “"Life’s not fair" or dismissing their sense of justice. They’re developing moral reasoning — shutting it down teaches them their feelings don’t matter.”,
-},
-},
-“8-12”: {
-label: “8–12 years”,
-emoji: “🧠”,
-summary: “Abstract thinking arrives. They can understand authority, respect, and social hierarchies as concepts — not just patterns. Moral reasoning is genuine. They’re building identity and increasingly need to understand the "why" behind everything.”,
-cognitive: [
-“Abstract thinking — can reason about hypotheticals and principles”,
-“Genuine moral reasoning — understands why rules exist, not just what they are”,
-“Can see situations from multiple perspectives simultaneously”,
-“Developing personal values and sense of identity”,
-“Understanding social hierarchies, authority, and institutional rules”,
-“Can plan ahead, consider consequences, and make informed choices”,
-],
-cannotYet: [
-“Fully regulate emotions under intense pressure (prefrontal cortex still developing)”,
-“Always resist peer pressure when it conflicts with values”,
-“Navigate adult-level complexity in relationships or decisions”,
-“Consistently prioritise long-term over short-term rewards”,
-],
-strategies: [
-{
-title: “Explain the reasoning — they need it now”,
-detail: “"Because I said so" stops working. They need to understand the logic. This isn’t defiance — it’s intellectual development.”,
-},
-{
-title: “Respect their growing autonomy”,
-detail: “Give them real choices with real consequences. Over-controlling at this age breeds either rebellion or dependency.”,
-},
-{
-title: “Have real conversations”,
-detail: “They can discuss fairness, ethics, and values meaningfully. Treat these as conversations, not lectures. Listen as much as you talk.”,
-},
-{
-title: “Pick your battles wisely”,
-detail: “Non-negotiables should be about safety and values. Everything else is a negotiation — and that’s healthy practice for adult life.”,
-},
-{
-title: “Repair matters more than ever”,
-detail: “If you get it wrong, apologise. Modelling accountability teaches more than any rule ever will.”,
-},
-],
-works: {
-label: “Questioning authority / pushing back”,
-good: “Engage with their reasoning: "That’s a fair point. Here’s my thinking…" Dialogue builds critical thinking and maintains trust.”,
-bad: “Pulling rank or demanding blind obedience. You’ll get compliance in the short term and disconnection in the long term.”,
-},
-},
+  "1-2": {
+    label: "1\u20132 years",
+    emoji: "\uD83E\uDDF8",
+    summary: "Exploring everything. Limited words but understands far more than they can say. Frustration is the main challenge because their body and desires outpace their language.",
+    cognitive: [
+      "Understands simple instructions (\u201Cgive me the ball\u201D, \u201Ccome here\u201D)",
+      "Learns through cause and effect \u2014 drops things, pushes buttons, watches reactions",
+      "Begins to recognise routines and anticipate what comes next",
+      "Points to communicate wants before words arrive",
+      "Starting to use 2\u20133 word phrases toward age 2"
+    ],
+    cannotYet: [
+      "Follow multi-step instructions reliably",
+      "Understand \u201Cwhy\u201D something is off-limits",
+      "Share or take turns (no concept of fairness yet)",
+      "Regulate frustration \u2014 meltdowns are neurological, not behavioural",
+      "Understand time (\u201Clater\u201D, \u201Ctomorrow\u201D mean nothing)"
+    ],
+    strategies: [
+      { title: "Use 2\u20134 word sentences", detail: "Match their language level. \u201CShoes on\u201D works. \u201CWe need to put your shoes on because we\u2019re going outside\u201D doesn\u2019t land." },
+      { title: "Narrate what you\u2019re doing", detail: "\u201CCutting banana. Here you go.\u201D This builds vocabulary and helps them predict what\u2019s happening." },
+      { title: "Offer two choices, not open questions", detail: "\u201CApple or banana?\u201D not \u201CWhat do you want?\u201D Open questions overwhelm them." },
+      { title: "Redirect, don\u2019t lecture", detail: "If they\u2019re doing something unsafe, physically move them and say what TO do: \u201CFeet on the floor\u201D instead of \u201CDon\u2019t climb.\u201D" },
+      { title: "Name their emotions for them", detail: "\u201CYou\u2019re frustrated because the block won\u2019t fit.\u201D They can\u2019t label feelings yet \u2014 you\u2019re teaching them the vocabulary." },
+      { title: "Expect repetition \u2014 lots of it", detail: "They need to hear and practise things dozens of times. This isn\u2019t defiance, it\u2019s how the brain wires at this age." }
+    ],
+    works: {
+      label: "Frustration / meltdown",
+      good: "Stay calm, get close, name the feeling: \u201CYou\u2019re upset. I know.\u201D Wait it out. Offer a hug or distraction once the wave passes.",
+      bad: "Reasoning with them mid-meltdown, raising your voice, or expecting them to \u201Cuse their words\u201D when they\u2019re flooded."
+    }
+  },
+  "2-3": {
+    label: "2\u20133 years",
+    emoji: "\uD83D\uDE80",
+    summary: "Language is exploding. They want autonomy but can\u2019t handle the consequences. \u201CNo\u201D and \u201Cmine\u201D are their favourite words. They\u2019re testing every boundary \u2014 not to be defiant, but to learn where the edges are.",
+    cognitive: [
+      "Vocabulary expanding rapidly \u2014 50 words at 2, 200+ by 3",
+      "Starting to string together longer phrases and short sentences",
+      "Understands simple instructions and can follow 2-step directions",
+      "Beginning parallel play \u2014 playing alongside, not yet with, other kids",
+      "Strong sense of routine; gets upset when things change unexpectedly",
+      "Starting to assert preferences and independence (\u201CI do it!\u201D)"
+    ],
+    cannotYet: [
+      "Understand another person\u2019s perspective or feelings",
+      "Share willingly (still purely egocentric \u2014 this is normal)",
+      "Wait or delay gratification for more than a few seconds",
+      "Understand consequences beyond the immediate moment",
+      "Control impulses even when they know the rule",
+      "Process long explanations or abstract reasoning"
+    ],
+    strategies: [
+      { title: "Give them micro-autonomy", detail: "Let them \u201Chelp\u201D \u2014 carry a spoon, press the lift button, choose between two shirts. This satisfies the drive for independence without the chaos." },
+      { title: "State expectations before transitions", detail: "\u201CTwo more minutes then bath time.\u201D They can\u2019t handle sudden switches. Warnings prevent meltdowns." },
+      { title: "Use positive instructions", detail: "\u201CWalk\u201D not \u201CDon\u2019t run.\u201D \u201CGentle hands\u201D not \u201CStop hitting.\u201D Their brain processes the action word \u2014 if you say \u201Cdon\u2019t run\u201D they hear \u201Crun.\u201D" },
+      { title: "Validate then redirect", detail: "\u201CYou want the red cup. The red cup is dirty. Here\u2019s the blue cup.\u201D Skipping validation = escalation." },
+      { title: "Keep rules few and consistent", detail: "3\u20134 non-negotiable rules max. Everything else is a preference. Consistency matters more than strictness." },
+      { title: "When frustrated, help them find words", detail: "\u201CAre you angry because she took your truck? Say: \u2018my turn\u2019.\u201D You\u2019re scripting social language they\u2019ll use later." }
+    ],
+    works: {
+      label: "\u201CNo!\u201D to everything / defiance",
+      good: "Pick your battles. Offer choices where possible. For non-negotiables, stay calm and follow through without drama: \u201CI hear you don\u2019t want to. It\u2019s time anyway.\u201D",
+      bad: "Getting into power struggles, repeating yourself louder, or taking the \u201Cno\u201D personally. They\u2019re practising autonomy, not attacking you."
+    }
+  },
+  "3-4": {
+    label: "3\u20134 years",
+    emoji: "\uD83C\uDFA8",
+    summary: "Imagination is in full swing. They ask \u201Cwhy\u201D constantly. They\u2019re starting to understand rules exist but not why they apply to them. Social play is emerging \u2014 and so are social conflicts.",
+    cognitive: [
+      "Speaks in full sentences, tells simple stories",
+      "Asks \u201Cwhy\u201D about everything (genuine curiosity, not defiance)",
+      "Starts understanding basic rules of games and social situations",
+      "Developing imagination \u2014 pretend play, imaginary friends",
+      "Beginning to recognise others have feelings, but can\u2019t consistently act on it",
+      "Can follow 2\u20133 step instructions"
+    ],
+    cannotYet: [
+      "Consistently see things from another person\u2019s viewpoint",
+      "Understand social hierarchies or authority as a concept",
+      "Regulate emotions independently \u2014 still needs co-regulation from adults",
+      "Distinguish between intentional and accidental actions",
+      "Understand abstract ideas like \u201Crespect\u201D or \u201Cresponsibility\u201D",
+      "Reliably apply rules across different contexts"
+    ],
+    strategies: [
+      { title: "Answer the \u201Cwhy\u201D questions", detail: "Even short answers build trust and critical thinking. \u201CBecause it\u2019s hot and it\u2019ll hurt your hand\u201D is enough. You don\u2019t need a lecture." },
+      { title: "Use \u201Cwhen/then\u201D instead of threats", detail: "\u201CWhen you put your shoes on, then we can go to the park\u201D is motivating. \u201CIf you don\u2019t put shoes on we\u2019re not going\u201D is threatening. Same outcome, different wiring." },
+      { title: "Coach social situations in real time", detail: "\u201CShe\u2019s crying because you took her toy. How do you think she feels?\u201D Start planting perspective-taking seeds even though it won\u2019t be consistent yet." },
+      { title: "Give them a role", detail: "\u201CYou\u2019re my helper today\u201D or \u201CCan you show Grandpa how we do it?\u201D They respond to responsibility better than instructions." },
+      { title: "Repair after conflict", detail: "Come back once everyone is calm: \u201CThat was hard. You felt angry and I felt frustrated. We\u2019re okay now.\u201D This teaches that conflict doesn\u2019t break relationships." },
+      { title: "Don\u2019t expect consistency", detail: "They\u2019ll follow a rule perfectly one day and break it the next. That\u2019s normal \u2014 the neural pathways aren\u2019t hardened yet. Repetition is the only path." }
+    ],
+    works: {
+      label: "Talking back / copying adult behaviour",
+      good: "\u201CI hear you, but let the grown-ups handle it. Why don\u2019t you go do X?\u201D Acknowledge, redirect, move on. Brief, warm, clear.",
+      bad: "Long speeches about respect, sitting them down for an adult conversation, or using words they can\u2019t understand. They\u2019ll just feel bad without learning anything."
+    }
+  },
+  "4-5": {
+    label: "4\u20135 years",
+    emoji: "\u2B50",
+    summary: "Socially aware and emotionally perceptive. Can be surprisingly strategic \u2014 they know which buttons to press. This looks like adult reasoning but it\u2019s pattern recognition, not moral understanding. They\u2019re copying, not comprehending.",
+    cognitive: [
+      "Pattern recognition \u2014 \u201Cif I do X, Y happens\u201D \u2014 applied to social situations",
+      "Can identify emotions in others and sometimes respond to them",
+      "Understands and can follow rules, but inconsistently",
+      "Developing early empathy \u2014 comforting a crying friend, feeling guilt",
+      "Negotiating, bargaining, and testing limits with increasing sophistication",
+      "Beginning to understand past and future, but still very present-focused"
+    ],
+    cannotYet: [
+      "Understand WHY rules exist (follows them because of consequences, not principles)",
+      "Reliably take another person\u2019s perspective under emotional pressure",
+      "Grasp abstract concepts: respect, authority, fairness as principles",
+      "Manage emotional flooding \u2014 when overwhelmed, higher thinking shuts down",
+      "Understand that the same behaviour can be okay in one context and not another",
+      "Process complex or lengthy verbal reasoning from adults"
+    ],
+    strategies: [
+      { title: "Don\u2019t mistake cleverness for maturity", detail: "She can read a room and influence people. That\u2019s intelligence, not moral reasoning. She still needs simple, clear, age-appropriate guidance." },
+      { title: "Engage their problem-solving", detail: "\u201CWhat do you think we should do?\u201D gives them agency and practises the thinking you actually want them to develop." },
+      { title: "Keep corrections to 5\u201310 words", detail: "Their processing buffer is small. Long explanations get lost. \u201CWe don\u2019t say it like that. Try again.\u201D is more effective than a paragraph." },
+      { title: "Model the behaviour, don\u2019t just demand it", detail: "If you want them to say please, say it yourself consistently. They learn from watching, not from being told." },
+      { title: "Use natural consequences where safe", detail: "\u201CIf you throw the toy, I\u2019ll put it away\u201D \u2014 then follow through calmly. This teaches cause and effect better than any lecture." },
+      { title: "Protect the relationship over winning the moment", detail: "Connection before correction. A child who feels safe with you will accept guidance. A child who feels judged will shut down or fight back." }
+    ],
+    works: {
+      label: "Strategic behaviour / \u201Cmanipulation\u201D",
+      good: "Name it neutrally: \u201CI can see you really want X. The answer is still no, but let\u2019s find something else.\u201D Don\u2019t punish cleverness \u2014 redirect it.",
+      bad: "Calling them manipulative, shaming the behaviour, or assuming malicious intent. They\u2019re practising social skills. Clumsily, but that\u2019s how it starts."
+    }
+  },
+  "5-7": {
+    label: "5\u20137 years",
+    emoji: "\uD83D\uDCDA",
+    summary: "The age of reason is beginning \u2014 slowly. They\u2019re starting to understand fairness, rules, and other people\u2019s perspectives, but it\u2019s fragile and inconsistent. Peer relationships become central. They care deeply about what\u2019s \u201Cfair.\u201D",
+    cognitive: [
+      "Beginning genuine perspective-taking (\u201CHow would you feel if...\u201D starts working)",
+      "Understanding rules as applying to everyone, not just themselves",
+      "Developing a sense of fairness and justice (often rigid \u2014 \u201Cthat\u2019s not fair!\u201D)",
+      "Can follow multi-step instructions and explain their reasoning",
+      "Growing ability to wait, share, and take turns genuinely",
+      "Starting to understand that actions have broader consequences"
+    ],
+    cannotYet: [
+      "Think abstractly or hypothetically with consistency",
+      "Fully regulate emotions under stress (still developing until mid-20s)",
+      "Navigate complex social dynamics independently",
+      "Understand nuance \u2014 rules feel black and white",
+      "Separate intent from outcome reliably (\u201Che meant to!\u201D)"
+    ],
+    strategies: [
+      { title: "Start reasoning with them \u2014 briefly", detail: "\u201CWe don\u2019t do that because it hurts people\u2019s feelings\u201D now actually registers. Keep it to one sentence of reasoning, not a lecture." },
+      { title: "Involve them in rule-making", detail: "\u201CWhat should the rule be about screen time?\u201D They\u2019ll often be stricter than you. Buy-in comes from participation." },
+      { title: "Use their sense of fairness", detail: "\u201CWould it be fair if someone did that to you?\u201D This lands now in a way it didn\u2019t at 4." },
+      { title: "Allow more independence with a safety net", detail: "Let them resolve minor conflicts with peers before stepping in. Coach afterwards: \u201CWhat worked? What would you do differently?\u201D" },
+      { title: "Acknowledge their growing maturity", detail: "\u201CI noticed you waited your turn \u2014 that was really mature.\u201D Specific praise reinforces the exact behaviour you want to see more of." }
+    ],
+    works: {
+      label: "\u201CThat\u2019s not fair!\u201D",
+      good: "Take it seriously: \u201CI hear you. Here\u2019s why I made that decision.\u201D A short explanation respects their growing ability to reason.",
+      bad: "\u201CLife\u2019s not fair\u201D or dismissing their sense of justice. They\u2019re developing moral reasoning \u2014 shutting it down teaches them their feelings don\u2019t matter."
+    }
+  },
+  "8-12": {
+    label: "8\u201312 years",
+    emoji: "\uD83E\uDDE0",
+    summary: "Abstract thinking arrives. They can understand authority, respect, and social hierarchies as concepts \u2014 not just patterns. Moral reasoning is genuine. They\u2019re building identity and increasingly need to understand the \u201Cwhy\u201D behind everything.",
+    cognitive: [
+      "Abstract thinking \u2014 can reason about hypotheticals and principles",
+      "Genuine moral reasoning \u2014 understands why rules exist, not just what they are",
+      "Can see situations from multiple perspectives simultaneously",
+      "Developing personal values and sense of identity",
+      "Understanding social hierarchies, authority, and institutional rules",
+      "Can plan ahead, consider consequences, and make informed choices"
+    ],
+    cannotYet: [
+      "Fully regulate emotions under intense pressure (prefrontal cortex still developing)",
+      "Always resist peer pressure when it conflicts with values",
+      "Navigate adult-level complexity in relationships or decisions",
+      "Consistently prioritise long-term over short-term rewards"
+    ],
+    strategies: [
+      { title: "Explain the reasoning \u2014 they need it now", detail: "\u201CBecause I said so\u201D stops working. They need to understand the logic. This isn\u2019t defiance \u2014 it\u2019s intellectual development." },
+      { title: "Respect their growing autonomy", detail: "Give them real choices with real consequences. Over-controlling at this age breeds either rebellion or dependency." },
+      { title: "Have real conversations", detail: "They can discuss fairness, ethics, and values meaningfully. Treat these as conversations, not lectures. Listen as much as you talk." },
+      { title: "Pick your battles wisely", detail: "Non-negotiables should be about safety and values. Everything else is a negotiation \u2014 and that\u2019s healthy practice for adult life." },
+      { title: "Repair matters more than ever", detail: "If you get it wrong, apologise. Modelling accountability teaches more than any rule ever will." }
+    ],
+    works: {
+      label: "Questioning authority / pushing back",
+      good: "Engage with their reasoning: \u201CThat\u2019s a fair point. Here\u2019s my thinking...\u201D Dialogue builds critical thinking and maintains trust.",
+      bad: "Pulling rank or demanding blind obedience. You\u2019ll get compliance in the short term and disconnection in the long term."
+    }
+  }
 };
 
 const ageKeys = Object.keys(data);
+let activeTab = "2-3";
+let expandedCard = null;
 
-export default function ChildDevelopmentGuide() {
-const [activeTab, setActiveTab] = useState(“2-3”);
-const [expandedCard, setExpandedCard] = useState(null);
-const age = data[activeTab];
-
-return (
-<div style={{
-minHeight: “100vh”,
-background: “#FAFAF8”,
-fontFamily: “‘Georgia’, ‘Times New Roman’, serif”,
-}}>
-{/* Header */}
-<div style={{
-background: “linear-gradient(135deg, #2C3E50 0%, #34495E 50%, #2C3E50 100%)”,
-padding: “32px 24px 20px”,
-color: “white”,
-}}>
-<h1 style={{
-margin: 0,
-fontSize: “22px”,
-fontWeight: 700,
-letterSpacing: “-0.3px”,
-fontFamily: “‘Georgia’, serif”,
-}}>
-How Kids Think
-</h1>
-<p style={{
-margin: “6px 0 0”,
-fontSize: “13px”,
-opacity: 0.7,
-fontFamily: “-apple-system, sans-serif”,
-fontWeight: 400,
-}}>
-What they can do, what they can’t yet, and what actually works
-</p>
-</div>
-
-```
-  {/* Tabs */}
-  <div style={{
-    display: "flex",
-    overflowX: "auto",
-    background: "#2C3E50",
-    paddingBottom: "0",
-    gap: "0",
-    WebkitOverflowScrolling: "touch",
-    scrollbarWidth: "none",
-  }}>
-    {ageKeys.map((key) => {
-      const isActive = activeTab === key;
-      return (
-        <button
-          key={key}
-          onClick={() => { setActiveTab(key); setExpandedCard(null); }}
-          style={{
-            flex: "0 0 auto",
-            padding: "10px 16px",
-            border: "none",
-            borderBottom: isActive ? "3px solid #E67E22" : "3px solid transparent",
-            background: isActive ? "rgba(255,255,255,0.08)" : "transparent",
-            color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-            fontSize: "13px",
-            fontFamily: "-apple-system, sans-serif",
-            fontWeight: isActive ? 600 : 400,
-            cursor: "pointer",
-            whiteSpace: "nowrap",
-            transition: "all 0.2s ease",
-          }}
-        >
-          <span style={{ marginRight: "4px" }}>{data[key].emoji}</span>
-          {data[key].label}
-        </button>
-      );
-    })}
-  </div>
-
-  {/* Content */}
-  <div style={{ padding: "20px 16px", maxWidth: "720px", margin: "0 auto" }}>
-    
-    {/* Summary */}
-    <div style={{
-      background: "white",
-      borderRadius: "8px",
-      padding: "18px 20px",
-      marginBottom: "16px",
-      borderLeft: "4px solid #E67E22",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-    }}>
-      <p style={{
-        margin: 0,
-        fontSize: "15px",
-        lineHeight: 1.65,
-        color: "#2C3E50",
-      }}>
-        {age.summary}
-      </p>
-    </div>
-
-    {/* Two column: Can / Can't */}
-    <div style={{
-      display: "grid",
-      gridTemplateColumns: "1fr 1fr",
-      gap: "12px",
-      marginBottom: "16px",
-    }}>
-      {/* Can do */}
-      <div style={{
-        background: "white",
-        borderRadius: "8px",
-        padding: "16px",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-      }}>
-        <h3 style={{
-          margin: "0 0 12px",
-          fontSize: "12px",
-          fontFamily: "-apple-system, sans-serif",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.8px",
-          color: "#27AE60",
-        }}>
-          ✓ What they can do
-        </h3>
-        {age.cognitive.map((item, i) => (
-          <p key={i} style={{
-            margin: "0 0 8px",
-            fontSize: "13px",
-            lineHeight: 1.55,
-            color: "#444",
-            fontFamily: "-apple-system, sans-serif",
-            paddingLeft: "12px",
-            position: "relative",
-          }}>
-            <span style={{
-              position: "absolute",
-              left: 0,
-              color: "#27AE60",
-              fontWeight: 700,
-            }}>·</span>
-            {item}
-          </p>
-        ))}
-      </div>
-
-      {/* Can't yet */}
-      <div style={{
-        background: "white",
-        borderRadius: "8px",
-        padding: "16px",
-        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-      }}>
-        <h3 style={{
-          margin: "0 0 12px",
-          fontSize: "12px",
-          fontFamily: "-apple-system, sans-serif",
-          fontWeight: 700,
-          textTransform: "uppercase",
-          letterSpacing: "0.8px",
-          color: "#C0392B",
-        }}>
-          ✗ What they can't yet
-        </h3>
-        {age.cannotYet.map((item, i) => (
-          <p key={i} style={{
-            margin: "0 0 8px",
-            fontSize: "13px",
-            lineHeight: 1.55,
-            color: "#444",
-            fontFamily: "-apple-system, sans-serif",
-            paddingLeft: "12px",
-            position: "relative",
-          }}>
-            <span style={{
-              position: "absolute",
-              left: 0,
-              color: "#C0392B",
-              fontWeight: 700,
-            }}>·</span>
-            {item}
-          </p>
-        ))}
-      </div>
-    </div>
-
-    {/* Strategies */}
-    <div style={{
-      background: "white",
-      borderRadius: "8px",
-      padding: "16px 20px",
-      marginBottom: "16px",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-    }}>
-      <h3 style={{
-        margin: "0 0 14px",
-        fontSize: "12px",
-        fontFamily: "-apple-system, sans-serif",
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.8px",
-        color: "#2C3E50",
-      }}>
-        What works
-      </h3>
-      {age.strategies.map((s, i) => (
-        <div
-          key={i}
-          onClick={() => setExpandedCard(expandedCard === i ? null : i)}
-          style={{
-            padding: "12px 14px",
-            marginBottom: "8px",
-            background: expandedCard === i ? "#FDF6EE" : "#FAFAF8",
-            borderRadius: "6px",
-            cursor: "pointer",
-            transition: "all 0.15s ease",
-            border: expandedCard === i ? "1px solid #E67E22" : "1px solid #ECECEA",
-          }}
-        >
-          <div style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}>
-            <span style={{
-              fontSize: "14px",
-              fontWeight: 600,
-              color: "#2C3E50",
-              fontFamily: "-apple-system, sans-serif",
-            }}>
-              {s.title}
-            </span>
-            <span style={{
-              fontSize: "11px",
-              color: "#999",
-              transform: expandedCard === i ? "rotate(180deg)" : "rotate(0)",
-              transition: "transform 0.2s ease",
-            }}>
-              ▼
-            </span>
-          </div>
-          {expandedCard === i && (
-            <p style={{
-              margin: "10px 0 0",
-              fontSize: "13px",
-              lineHeight: 1.6,
-              color: "#555",
-              fontFamily: "-apple-system, sans-serif",
-            }}>
-              {s.detail}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
-
-    {/* Works vs Doesn't */}
-    <div style={{
-      background: "white",
-      borderRadius: "8px",
-      padding: "16px 20px",
-      marginBottom: "24px",
-      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
-    }}>
-      <h3 style={{
-        margin: "0 0 4px",
-        fontSize: "12px",
-        fontFamily: "-apple-system, sans-serif",
-        fontWeight: 700,
-        textTransform: "uppercase",
-        letterSpacing: "0.8px",
-        color: "#2C3E50",
-      }}>
-        Common scenario
-      </h3>
-      <p style={{
-        margin: "0 0 14px",
-        fontSize: "15px",
-        fontWeight: 600,
-        color: "#2C3E50",
-      }}>
-        {age.works.label}
-      </p>
-      
-      <div style={{
-        padding: "12px 14px",
-        background: "#FDEDEC",
-        borderRadius: "6px",
-        marginBottom: "8px",
-        borderLeft: "3px solid #C0392B",
-      }}>
-        <span style={{
-          fontSize: "11px",
-          fontWeight: 700,
-          color: "#C0392B",
-          fontFamily: "-apple-system, sans-serif",
-          textTransform: "uppercase",
-          letterSpacing: "0.5px",
-        }}>
-          Doesn't work
-        </span>
-        <p style={{
-          margin: "6px 0 0",
-          fontSize: "13px",
-          lineHeight: 1.55,
-          color: "#555",
-          fontFamily: "-apple-system, sans-serif",
-        }}>
-          {age.works.bad}
-        </p>
-      </div>
-
-      <div style={{
-        padding: "12px 14px",
-        background: "#EAFAF1",
-        borderRadius: "6px",
-        borderLeft: "3px solid #27AE60",
-      }}>
-        <span style={{
-          fontSize: "11px",
-          fontWeight: 700,
-          color: "#27AE60",
-          fontFamily: "-apple-system, sans-serif",
-          textTransform: "uppercase",
-          letterSpacing: "0.5px",
-        }}>
-          Works
-        </span>
-        <p style={{
-          margin: "6px 0 0",
-          fontSize: "13px",
-          lineHeight: 1.55,
-          color: "#555",
-          fontFamily: "-apple-system, sans-serif",
-        }}>
-          {age.works.good}
-        </p>
-      </div>
-    </div>
-
-    {/* Footer */}
-    <p style={{
-      textAlign: "center",
-      fontSize: "11px",
-      color: "#AAA",
-      fontFamily: "-apple-system, sans-serif",
-      margin: "0 0 32px",
-    }}>
-      Every child develops at their own pace. These are general guides, not rigid milestones.
-    </p>
-  </div>
-</div>
-```
-
-);
+function renderTabs() {
+  const tabsEl = document.getElementById("tabs");
+  tabsEl.innerHTML = ageKeys.map(key => {
+    const d = data[key];
+    const cls = key === activeTab ? "tab-btn active" : "tab-btn";
+    return `<button class="${cls}" data-key="${key}">${d.emoji} ${d.label}</button>`;
+  }).join("");
+  tabsEl.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      activeTab = btn.dataset.key;
+      expandedCard = null;
+      renderTabs();
+      renderContent();
+    });
+  });
 }
+
+function renderContent() {
+  const age = data[activeTab];
+  const el = document.getElementById("content");
+
+  let html = "";
+
+  // Summary
+  html += `<div class="summary-card"><p>${age.summary}</p></div>`;
+
+  // Two columns
+  html += `<div class="two-col">`;
+  // Can do
+  html += `<div class="col-card"><h3 class="green">\u2713 What they can do</h3>`;
+  age.cognitive.forEach(item => {
+    html += `<p class="col-item"><span class="dot green">\u00B7</span>${esc(item)}</p>`;
+  });
+  html += `</div>`;
+  // Can't yet
+  html += `<div class="col-card"><h3 class="red">\u2717 What they can\u2019t yet</h3>`;
+  age.cannotYet.forEach(item => {
+    html += `<p class="col-item"><span class="dot red">\u00B7</span>${esc(item)}</p>`;
+  });
+  html += `</div></div>`;
+
+  // Strategies
+  html += `<div class="strategies-card"><div class="section-label">What works</div>`;
+  age.strategies.forEach((s, i) => {
+    const expanded = expandedCard === i;
+    html += `<div class="strategy-item${expanded ? " expanded" : ""}" data-idx="${i}">
+      <div class="strategy-header">
+        <span class="strategy-title">${esc(s.title)}</span>
+        <span class="strategy-arrow">\u25BC</span>
+      </div>
+      <div class="strategy-detail">${esc(s.detail)}</div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Scenario
+  html += `<div class="scenario-card">
+    <div class="section-label">Common scenario</div>
+    <div class="scenario-label">${esc(age.works.label)}</div>
+    <div class="scenario-bad">
+      <div class="scenario-tag red">Doesn\u2019t work</div>
+      <p class="scenario-text">${esc(age.works.bad)}</p>
+    </div>
+    <div class="scenario-good">
+      <div class="scenario-tag green">Works</div>
+      <p class="scenario-text">${esc(age.works.good)}</p>
+    </div>
+  </div>`;
+
+  html += `<p class="footer">Every child develops at their own pace. These are general guides, not rigid milestones.</p>`;
+
+  el.innerHTML = html;
+
+  // Strategy click handlers
+  el.querySelectorAll(".strategy-item").forEach(item => {
+    item.addEventListener("click", () => {
+      const idx = parseInt(item.dataset.idx);
+      expandedCard = expandedCard === idx ? null : idx;
+      renderContent();
+    });
+  });
+}
+
+function esc(str) {
+  const div = document.createElement("div");
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+renderTabs();
+renderContent();
+</script>
+
+</body>
+</html>
