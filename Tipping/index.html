@@ -455,16 +455,17 @@ hr { border: none; border-top: 1px solid var(–border); margin: 56px 0; }
         <div class="o">  const banterTips = personality.override(analyticalTips);</div>
         <div class="o"> </div>
         <div class="c">  // BUG: Edge case in override logic</div>
-        <div class="c">  // When round number is prime AND banter coefficient</div>
-        <div class="c">  // exceeds 0.93, the merge resolution fails silently.</div>
-        <div class="c">  // The Algorithm bypasses the personality layer and</div>
-        <div class="c">  // submits pure analytical tips for the entire round.</div>
+        <div class="c">  // When round number is prime AND the round contains</div>
+        <div class="c">  // fewer than 9 fixtures, the merge resolution fails</div>
+        <div class="c">  // silently. The Algorithm bypasses the personality</div>
+        <div class="c">  // layer and submits pure analytical tips.</div>
         <div class="c">  //</div>
-        <div class="c">  // Affected rounds: 2, 3, 5, 7, 11, 13, 17, 19, 23</div>
+        <div class="c">  // Trigger conditions are inconsistent. May not fire</div>
+        <div class="c">  // on every qualifying round. Cause unknown.</div>
         <div class="c">  //</div>
         <div class="c">  // Commissioner was notified. Response: "She'll be right."</div>
         <div class="o"> </div>
-        <div class="o">  if (isPrime(round.number) && BANTER_COEFFICIENT > 0.93) {</div>
+        <div class="o">  if (isPrime(round.number) && fixtures.length < 9 && Math.random() > 0.4) {</div>
         <div class="w">    // The Algorithm takes the wheel</div>
         <div class="w">    return analyticalTips; <span class="c">// personality layer bypassed</span></div>
         <div class="o">  }</div>
