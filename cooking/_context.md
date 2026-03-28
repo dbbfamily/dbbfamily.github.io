@@ -6,7 +6,7 @@ Juan is a hands-on home cook in Canberra. Dump-and-cook style, minimal prep, min
 
 - **TM7** is the workhorse — sauces, rice, grains, steaming. Reduces need for separate saucepans. All liquids in grams (scale-based). Browning mode needs solid material to activate; Gentle/Intense only, no speed. Max normal temp 120°C.
 - **Philips XXL Air Fryer** is the primary roasting tool (oven has had reliability issues). Handles ~2kg roasts. Crackling at 200°C throughout. Watch rind expansion near element — foil patch mid-cook.
-- **Westinghouse oven/cooktop** — 5-zone induction with bridge zones. 28cm centre zone. Oven has AirFry and Steam modes but has been unreliable.
+- **Westinghouse oven/cooktop** — 5-zone induction with bridge zones. 28cm centre zone. AirFry and Steam modes. Replaced old Euromaid which was unreliable.
 - **Ingenio** handles all non-stick; **Scanpan Clad 5** reserved for high-heat stainless work.
 - **Weber Spirit** covers outdoor grilling.
 

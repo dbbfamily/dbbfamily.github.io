@@ -5,7 +5,8 @@ oven:
   oven_capacity: 125L gross / 116L useable
   functions: 10 (incl. AirFry, EasyBake +Steam, PyroClean)
   power: 40A
-  status: unreliable — air fryer is roasting backup
+  previous_oven: Euromaid (replaced — was unreliable)
+  status: new — primary oven
   cooktop:
     type: full induction, 5 zones
     centre: 28cm / 3500W / 5200W boost
