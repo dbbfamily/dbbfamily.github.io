@@ -1,0 +1,33 @@
+oven:
+  brand: Westinghouse
+  model: WFEP9757DD
+  type: 90cm induction pyrolytic freestanding
+  oven_capacity: 125L gross / 116L useable
+  functions: 10 (incl. AirFry, EasyBake +Steam, PyroClean)
+  power: 40A
+  status: unreliable — air fryer is roasting backup
+  cooktop:
+    type: full induction, 5 zones
+    centre: 28cm / 3500W / 5200W boost
+    other_zones: 4x 2300W / 3200W boost
+    bridge_zone: left or right pairs, 4600W
+    features: [PowerBoost, Pause, Keep warm, Child lock, Hob2Hood, MaxiZone]
+
+thermomix:
+  model: TM7
+  uses: sauces, rice, grains, steaming
+  browning: Gentle / Intense (no speed selection)
+  max_temp: 120C (normal mode)
+  measurements: grams via built-in scale
+
+air_fryer:
+  brand: Philips
+  model: XXL
+  capacity: 7.2L
+  max_roast: ~2kg
+  crackling_temp: 200C throughout
+  notes: watch rind expansion near element
+
+bbq:
+  brand: Weber
+  model: Spirit

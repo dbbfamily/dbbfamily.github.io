@@ -1,0 +1,96 @@
+asian_sauces:
+  - soy sauce
+  - fish sauce
+  - oyster sauce
+  - hoisin sauce
+  - teriyaki sauce
+  - char siu sauce
+  - sesame oil / toasted sesame oil
+  - rice vinegar
+  - sukiyaki concentrate
+  - white miso paste
+  - miso soup base
+  - coconut milk/cream (tinned)
+  - Thai curry paste (red/green/yellow)
+
+asian_dry_goods:
+  - dried noodles (egg/rice/udon)
+  - rice (jasmine/basmati/sushi)
+  - cornflour / potato starch
+
+oils:
+  - olive oil (cooking)
+  - extra virgin olive oil
+  - vegetable/canola oil
+  - cooking spray
+
+vinegars:
+  - white vinegar
+  - apple cider vinegar
+  - balsamic vinegar
+  - rice vinegar
+
+tomato:
+  - passata
+  - tomato paste (tube/tin)
+  - tinned tomatoes (diced/whole)
+
+western_sauces:
+  - Worcestershire sauce
+  - Tabasco
+  - chicken bone broth
+  - chicken stock powder/cubes
+  - honey
+  - mustard (Dijon/wholegrain)
+  - mayo / Kewpie
+  - tomato sauce / BBQ sauce
+  - sriracha
+
+baking:
+  - plain flour
+  - self-raising flour
+  - bread flour
+  - cornflour
+  - caster sugar
+  - brown sugar
+  - icing sugar
+  - vanilla extract/paste
+  - baking powder
+  - bicarb soda
+  - dried yeast
+  - cocoa powder
+
+dairy_fridge:
+  - butter (salted/unsalted)
+  - eggs
+  - cream / thickened cream
+  - milk / soy milk
+  - cheese (cheddar/parmesan etc)
+
+herbs_spices:
+  - salt (table/sea/flaky)
+  - black pepper (ground/whole)
+  - cumin
+  - paprika / smoked paprika
+  - turmeric
+  - cinnamon
+  - garlic powder
+  - onion powder
+  - chilli flakes / cayenne
+  - oregano (dried)
+  - thyme (dried)
+  - rosemary (dried)
+  - mixed herbs
+
+dry_goods:
+  - dried pasta (spaghetti/penne etc)
+  - tinned beans (chickpeas/kidney etc)
+  - oats
+
+fresh_usually_on_hand:
+  - fresh garlic
+  - fresh ginger
+  - lemons / limes
+  - spring onions / shallots
+  - wraps / tortillas
+  - bread

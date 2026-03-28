@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kitchen Setup — DBB Family</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,500;0,9..40,700;1,9..40,300&family=Fraunces:ital,opsz,wght@0,9..144,700;1,9..144,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #1a1814;
+    --surface: #23201b;
+    --surface-hover: #2d2a24;
+    --border: #3a362e;
+    --text: #e8e2d8;
+    --text-muted: #9a9285;
+    --accent: #e07a3a;
+    --accent-dim: #c46a30;
+    --tag-bg: #2d2720;
+    --tag-text: #d4a574;
+    --green: #7aad6a;
+    --blue: #6a9aad;
+    --radius: 10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  .header {
+    padding: 3rem 1.5rem 2rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, #221f19 0%, var(--bg) 100%);
+  }
+
+  .header h1 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 2.4rem;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 0.25rem;
+  }
+
+  .header h1 span { color: var(--accent); }
+
+  .header p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .nav {
+    display: flex;
+    gap: 0.5rem;
+    padding: 1rem 1.5rem;
+    overflow-x: auto;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .nav button {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 0.5rem 1rem;
+    border-radius: 99px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+
+  .nav button:hover { border-color: var(--text-muted); color: var(--text); }
+  .nav button.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #1a1814;
+  }
+
+  .content { max-width: 720px; margin: 0 auto; padding: 1.5rem; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    transition: background 0.2s;
+  }
+
+  .card:hover { background: var(--surface-hover); }
+
+  .card h3 {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 0.15rem;
+    color: var(--text);
+  }
+
+  .card .subtitle {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+
+  .card .note {
+    font-size: 0.82rem;
+    color: var(--accent);
+    font-style: italic;
+    margin-top: 0.5rem;
+  }
+
+  .card .spec {
+    display: inline-block;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 99px;
+    margin: 0.15rem 0.25rem 0.15rem 0;
+  }
+
+  .section-label {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    margin: 1.5rem 0 0.75rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .section-label:first-child { margin-top: 0; }
+
+  .section-label .icon {
+    font-size: 1.1rem;
+  }
+
+  .item-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+
+  @media (max-width: 480px) {
+    .item-list { grid-template-columns: 1fr; }
+  }
+
+  .item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0.6rem 0.85rem;
+    font-size: 0.85rem;
+    color: var(--text);
+    transition: background 0.15s;
+  }
+
+  .item:hover { background: var(--surface-hover); }
+
+  .search-wrap {
+    margin-bottom: 1.25rem;
+  }
+
+  .search-wrap input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    padding: 0.7rem 1.2rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .search-wrap input::placeholder { color: var(--text-muted); }
+  .search-wrap input:focus { border-color: var(--accent); }
+
+  .loading {
+    text-align: center;
+    padding: 4rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+  }
+
+  .dot { animation: pulse 1.4s infinite; }
+  .dot:nth-child(2) { animation-delay: 0.2s; }
+  .dot:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes pulse { 0%,80%,100% { opacity: 0.3; } 40% { opacity: 1; } }
+
+  .footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+  }
+
+  .footer a { color: var(--accent); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Kitchen <span>Setup</span></h1>
+  <p>The DBB family cooking reference</p>
+</div>
+
+<nav class="nav" id="nav"></nav>
+
+<div class="content" id="content">
+  <div class="loading">
+    <span class="dot">●</span> <span class="dot">●</span> <span class="dot">●</span>
+    <br>Loading kitchen data…
+  </div>
+</div>
+
+<div class="footer">
+  Source on <a href="https://github.com/dbbfamily/dbbfamily.github.io/tree/main/cooking">GitHub</a>
+</div>
+
+<script>
+const BASE = '';
+const FILES = {
+  appliances: `${BASE}appliances.yaml`,
+  cookware: `${BASE}cookware.yaml`,
+  pantry: `${BASE}pantry.yaml`,
+};
+
+const SECTION_META = {
+  appliances: { label: 'Appliances', icon: '🔥' },
+  cookware: { label: 'Cookware', icon: '🍳' },
+  pantry: { label: 'Pantry', icon: '🥫' },
+};
+
+let data = {};
+let activeSection = 'appliances';
+
+async function loadAll() {
+  const entries = Object.entries(FILES);
+  const results = await Promise.all(
+    entries.map(([key, url]) =>
+      fetch(url).then(r => r.text()).then(t => [key, jsyaml.load(t)])
+    )
+  );
+  results.forEach(([key, val]) => { data[key] = val; });
+  renderNav();
+  renderSection(activeSection);
+}
+
+function renderNav() {
+  const nav = document.getElementById('nav');
+  nav.innerHTML = Object.entries(SECTION_META).map(([key, m]) =>
+    `<button data-section="${key}" class="${key === activeSection ? 'active' : ''}">${m.icon} ${m.label}</button>`
+  ).join('');
+  nav.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeSection = btn.dataset.section;
+      nav.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderSection(activeSection);
+    });
+  });
+}
+
+function renderSection(section) {
+  const content = document.getElementById('content');
+  const d = data[section];
+  if (!d) { content.innerHTML = '<p>No data.</p>'; return; }
+
+  if (section === 'appliances') {
+    content.innerHTML = renderAppliances(d);
+  } else if (section === 'cookware') {
+    content.innerHTML = renderCookware(d);
+  } else if (section === 'pantry') {
+    content.innerHTML = renderPantry(d);
+  }
+}
+
+function renderAppliances(d) {
+  let html = '';
+  const items = [
+    { key: 'oven', title: 'Oven & Cooktop' },
+    { key: 'thermomix', title: 'Thermomix' },
+    { key: 'air_fryer', title: 'Air Fryer' },
+    { key: 'bbq', title: 'BBQ' },
+  ];
+  items.forEach(({ key, title }) => {
+    const a = d[key];
+    if (!a) return;
+    const specs = [];
+    if (a.brand) specs.push(a.brand);
+    if (a.model) specs.push(a.model);
+    if (a.type) specs.push(a.type);
+    if (a.capacity) specs.push(a.capacity);
+    if (a.max_temp) specs.push('Max ' + a.max_temp);
+    if (a.power) specs.push(a.power);
+
+    let notes = a.notes || a.status || '';
+    let extra = '';
+
+    if (a.uses) extra += `<div class="subtitle">${a.uses}</div>`;
+    if (a.measurements) extra += `<div class="subtitle">Measurements: ${a.measurements}</div>`;
+    if (a.browning) extra += `<div class="subtitle">Browning: ${a.browning}</div>`;
+    if (a.crackling_temp) extra += `<div class="subtitle">Crackling: ${a.crackling_temp} throughout</div>`;
+    if (a.max_roast) extra += `<div class="subtitle">Max roast: ${a.max_roast}</div>`;
+
+    if (a.cooktop) {
+      const ct = a.cooktop;
+      extra += `<div class="subtitle" style="margin-top:0.5rem">Cooktop: ${ct.type || ''}</div>`;
+      if (ct.centre) extra += `<div class="subtitle">Centre zone: ${ct.centre}</div>`;
+      if (ct.bridge_zone) extra += `<div class="subtitle">Bridge: ${ct.bridge_zone}</div>`;
+    }
+
+    html += `<div class="card">
+      <h3>${title}</h3>
+      ${extra}
+      <div>${specs.map(s => `<span class="spec">${s}</span>`).join('')}</div>
+      ${notes ? `<div class="note">${notes}</div>` : ''}
+    </div>`;
+  });
+  return html;
+}
+
+function renderCookware(d) {
+  let html = '';
+  const sections = [
+    { key: 'stainless_steel', label: 'Stainless Steel', icon: '🥘' },
+    { key: 'non_stick', label: 'Non-Stick', icon: '🍳' },
+    { key: 'other', label: 'Other', icon: '🔧' },
+    { key: 'tools', label: 'Tools', icon: '🔪' },
+    { key: 'planned', label: 'Planned / Considering', icon: '📋' },
+  ];
+  sections.forEach(({ key, label, icon }) => {
+    const items = d[key];
+    if (!items || !items.length) return;
+    html += `<div class="section-label"><span class="icon">${icon}</span> ${label}</div>`;
+    html += `<div class="item-list">${items.map(i => `<div class="item">${i}</div>`).join('')}</div>`;
+  });
+  return html;
+}
+
+function renderPantry(d) {
+  const catLabels = {
+    asian_sauces: ['🥢', 'Asian Sauces'],
+    asian_dry_goods: ['🍜', 'Asian Dry Goods'],
+    oils: ['🫒', 'Oils'],
+    vinegars: ['🍶', 'Vinegars'],
+    tomato: ['🍅', 'Tomato'],
+    western_sauces: ['🧴', 'Western Sauces'],
+    baking: ['🧁', 'Baking'],
+    dairy_fridge: ['🥛', 'Dairy & Fridge'],
+    herbs_spices: ['🌿', 'Herbs & Spices'],
+    dry_goods: ['🫘', 'Dry Goods'],
+    fresh_usually_on_hand: ['🧄', 'Fresh (Usually on Hand)'],
+  };
+
+  let html = `<div class="search-wrap"><input type="text" id="pantrySearch" placeholder="Search pantry…"></div>`;
+  html += '<div id="pantryItems">';
+  html += buildPantryHTML(d, catLabels, '');
+  html += '</div>';
+
+  setTimeout(() => {
+    const input = document.getElementById('pantrySearch');
+    if (input) {
+      input.addEventListener('input', () => {
+        const q = input.value.toLowerCase().trim();
+        document.getElementById('pantryItems').innerHTML = buildPantryHTML(d, catLabels, q);
+      });
+    }
+  }, 0);
+
+  return html;
+}
+
+function buildPantryHTML(d, catLabels, query) {
+  let html = '';
+  Object.entries(catLabels).forEach(([key, [icon, label]]) => {
+    const items = d[key];
+    if (!items) return;
+    const filtered = query ? items.filter(i => i.toLowerCase().includes(query)) : items;
+    if (!filtered.length) return;
+    html += `<div class="section-label"><span class="icon">${icon}</span> ${label}</div>`;
+    html += `<div class="item-list">${filtered.map(i => `<div class="item">${i}</div>`).join('')}</div>`;
+  });
+  if (!html && query) html = `<p style="color:var(--text-muted);padding:1rem 0;">No matches for "${query}"</p>`;
+  return html;
+}
+
+loadAll();
+</script>
+
+</body>
+</html>
