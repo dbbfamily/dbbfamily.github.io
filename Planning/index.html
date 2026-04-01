@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Run Planner</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #111;
+    --card: #1c1c1c;
+    --card-hover: #232323;
+    --text: #e8e4df;
+    --muted: #8a857f;
+    --accent: #c8a96e;
+    --costco: #e03c31;
+    --costco-bg: rgba(224,60,49,0.08);
+    --costco-dim: rgba(224,60,49,0.5);
+    --aldi: #0050aa;
+    --aldi-bg: rgba(0,80,170,0.08);
+    --aldi-dim: rgba(0,80,170,0.5);
+    --green: #5fa65f;
+    --green-bg: rgba(95,166,95,0.1);
+    --freezer: #4db8d1;
+    --freezer-bg: rgba(77,184,209,0.1);
+    --border: #2a2a2a;
+    --radius: 10px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 16px;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+  .header {
+    margin-bottom: 20px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+  }
+  h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    color: var(--accent);
+    margin-bottom: 2px;
+  }
+  .subtitle { color: var(--muted); font-size: 0.82rem; }
+
+.tabs {
+display: flex;
+gap: 6px;
+margin-bottom: 18px;
+position: sticky;
+top: 0;
+background: var(–bg);
+padding: 8px 0;
+z-index: 50;
+}
+.tab {
+flex: 1;
+padding: 12px 8px;
+border-radius: 8px;
+text-align: center;
+cursor: pointer;
+border: 2px solid var(–border);
+transition: all 0.25s;
+font-weight: 600;
+font-size: 0.85rem;
+}
+.tab .tab-count {
+display: block;
+font-size: 0.7rem;
+font-weight: 400;
+margin-top: 2px;
+opacity: 0.6;
+}
+.tab.costco-tab { color: var(–costco); }
+.tab.aldi-tab { color: var(–aldi); }
+.tab.costco-tab.active { border-color: var(–costco); background: var(–costco-bg); }
+.tab.aldi-tab.active { border-color: var(–aldi); background: var(–aldi-bg); }
+
+.store-panel { display: none; }
+.store-panel.active { display: block; }
+
+.aisle {
+margin-bottom: 20px;
+}
+.aisle-header {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 8px;
+padding-left: 2px;
+}
+.aisle-icon {
+font-size: 1rem;
+width: 28px;
+height: 28px;
+border-radius: 6px;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+}
+.aisle-name {
+font-family: ‘DM Serif Display’, serif;
+font-size: 1rem;
+}
+.aisle-progress {
+margin-left: auto;
+font-size: 0.72rem;
+color: var(–muted);
+}
+
+.item {
+display: grid;
+grid-template-columns: 26px 1fr auto;
+align-items: center;
+gap: 10px;
+background: var(–card);
+border-radius: 8px;
+padding: 10px 12px;
+margin-bottom: 4px;
+cursor: pointer;
+transition: background 0.15s;
+-webkit-tap-highlight-color: transparent;
+}
+.item:hover { background: var(–card-hover); }
+.item.done { opacity: 0.35; }
+.item.done .item-name,
+.item.done .item-detail { text-decoration: line-through; }
+
+.check {
+width: 20px;
+height: 20px;
+border-radius: 5px;
+border: 2px solid var(–border);
+display: flex;
+align-items: center;
+justify-content: center;
+font-size: 0.65rem;
+color: transparent;
+transition: all 0.2s;
+flex-shrink: 0;
+}
+.item.done .check {
+border-color: var(–green);
+background: var(–green);
+color: #fff;
+}
+
+.item-name {
+font-size: 0.86rem;
+font-weight: 500;
+}
+.item-detail {
+font-size: 0.75rem;
+color: var(–muted);
+margin-top: 1px;
+}
+.item-qty {
+font-size: 0.8rem;
+color: var(–accent);
+font-weight: 600;
+text-align: right;
+white-space: nowrap;
+}
+
+.badge {
+display: inline-block;
+font-size: 0.6rem;
+font-weight: 700;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+padding: 2px 6px;
+border-radius: 4px;
+margin-left: 6px;
+vertical-align: middle;
+}
+.badge-freezer {
+background: var(–freezer-bg);
+color: var(–freezer);
+}
+.badge-pantry {
+background: var(–green-bg);
+color: var(–green);
+}
+
+.tip {
+background: var(–card);
+border-radius: var(–radius);
+padding: 12px 14px;
+margin-bottom: 12px;
+border-left: 3px solid var(–accent);
+font-size: 0.8rem;
+color: var(–muted);
+line-height: 1.65;
+}
+.tip strong { color: var(–accent); }
+
+.summary {
+background: var(–card);
+border-radius: var(–radius);
+padding: 16px;
+text-align: center;
+margin-top: 12px;
+}
+.summary-val {
+font-family: ‘DM Serif Display’, serif;
+font-size: 1.4rem;
+color: var(–accent);
+}
+.summary-label {
+font-size: 0.72rem;
+color: var(–muted);
+margin-top: 2px;
+}
+
+.freezer-tip {
+background: var(–freezer-bg);
+border-left-color: var(–freezer);
+margin-top: 16px;
+}
+.freezer-tip strong { color: var(–freezer); }
+
+.progress-strip {
+position: fixed;
+top: 0; left: 0;
+height: 3px;
+background: var(–green);
+transition: width 0.4s;
+z-index: 100;
+}
+</style>
+
+</head>
+<body>
+
+<div class="progress-strip" id="progress"></div>
+
+<div class="header">
+  <h1>Shopping Run Planner</h1>
+  <p class="subtitle">Run 1: Costco Majura Park · Run 2: Aldi / Woolies top-up</p>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab costco-tab active" onclick="switchTab('costco')">
+    Costco
+    <span class="tab-count" id="costco-count"></span>
+  </div>
+  <div class="tab aldi-tab" onclick="switchTab('aldi')">
+    Aldi / Woolies
+    <span class="tab-count" id="aldi-count"></span>
+  </div>
+</div>
+
+<div id="costco-panel" class="store-panel active"></div>
+<div id="aldi-panel" class="store-panel"></div>
+
+<script>
+const stores = {
+  costco: {
+    topTip: `<strong>Weekday morning run.</strong> Bring boxes/bags — you'll fill a trolley. Park near the exit. Chest freezer items marked with ❄️ — bring a cooler bag if it's warm. Budget ~$280–350 for this run.`,
+    aisles: [
+      {
+        name: "Meat & Protein", icon: "🥩", iconBg: "rgba(224,100,80,0.12)", iconColor: "#e06450",
+        items: [
+          { name: "Chicken breast (bulk pack)", qty: "3 kg", detail: "Portion into 500g zip-locks, flatten for stacking", tag: "freezer" },
+          { name: "Chicken thigh (bulk pack)", qty: "2 kg", detail: "Great value at Costco, portion and freeze", tag: "freezer" },
+          { name: "Beef mince (lean)", qty: "2 kg", detail: "Flatten into 500g slabs in bags — freezes and thaws fast", tag: "freezer" },
+          { name: "Pork sausages (Kirkland or similar)", qty: "1.5 kg", detail: "Bag in portions of 4–6", tag: "freezer" },
+          { name: "Salmon fillets (frozen)", qty: "1 kg", detail: "Already individually wrapped at Costco", tag: "freezer" },
+          { name: "Bacon (twin-pack)", qty: "1 kg", detail: "Split packs, freeze one immediately", tag: "freezer" },
+          { name: "Eggs (30-pack tray)", qty: "1 tray", detail: "Fridge — 5 week shelf life, you'll use them", tag: "pantry" },
+          { name: "Block cheese (Bega or Kirkland)", qty: "1 kg", detail: "Grate half, bag and freeze; fridge the rest", tag: "freezer" },
+        ]
+      },
+      {
+        name: "Frozen Fruit & Veg", icon: "🥦", iconBg: "rgba(77,184,209,0.12)", iconColor: "#4db8d1",
+        items: [
+          { name: "Frozen peas (Kirkland)", qty: "2.5 kg", detail: "Big bag, great value", tag: "freezer" },
+          { name: "Frozen broccoli florets", qty: "1.5 kg", detail: "", tag: "freezer" },
+          { name: "Frozen stir-fry vegetable mix", qty: "1.5 kg", detail: "", tag: "freezer" },
+          { name: "Frozen spinach", qty: "1 kg", detail: "Curries, pasta, eggs", tag: "freezer" },
+          { name: "Frozen mixed berries", qty: "1.5 kg", detail: "Kirkland bag — smoothies, oats, baking", tag: "freezer" },
+          { name: "Frozen mango chunks", qty: "1 kg", detail: "Smoothies, dessert, snacking", tag: "freezer" },
+        ]
+      },
+      {
+        name: "Pantry Bulk", icon: "🌾", iconBg: "rgba(95,166,95,0.12)", iconColor: "#5fa65f",
+        items: [
+          { name: "Basmati rice (5kg bag)", qty: "5 kg", detail: "Kirkland or SunRice", tag: "pantry" },
+          { name: "Pasta (multi-pack)", qty: "3 kg", detail: "Usually penne + spaghetti packs", tag: "pantry" },
+          { name: "Rolled oats", qty: "2 kg", detail: "", tag: "pantry" },
+          { name: "Canned diced tomatoes (multi)", qty: "8 tins", detail: "Kirkland pack of 8", tag: "pantry" },
+          { name: "Canned tuna (multi-pack)", qty: "8 tins", detail: "Kirkland in springwater", tag: "pantry" },
+          { name: "Canned beans (variety)", qty: "8 tins", detail: "Chickpeas, kidney, black — mix it up", tag: "pantry" },
+          { name: "Coconut milk (multi-pack)", qty: "4 tins", detail: "", tag: "pantry" },
+          { name: "Kirkland olive oil", qty: "2 L", detail: "Big bottle, great quality for price", tag: "pantry" },
+          { name: "Vegetable / canola oil", qty: "1 L", detail: "Neutral cooking oil", tag: "pantry" },
+          { name: "Peanut butter", qty: "1 jar", detail: "Kirkland organic is good", tag: "pantry" },
+          { name: "Honey", qty: "1 kg", detail: "Kirkland raw — lasts forever", tag: "pantry" },
+          { name: "UHT milk (multi-pack)", qty: "6 × 1L", detail: "6–9 month shelf life", tag: "pantry" },
+          { name: "Dried lentils / split peas", qty: "2 kg", detail: "If available, otherwise Aldi run", tag: "pantry" },
+          { name: "Mixed nuts (Kirkland)", qty: "1 kg", detail: "Calorie-dense, long shelf life", tag: "pantry" },
+          { name: "Coffee beans / ground", qty: "1 kg", detail: "Kirkland or Lavazza", tag: "pantry" },
+        ]
+      },
+      {
+        name: "Household", icon: "🧻", iconBg: "rgba(154,149,144,0.1)", iconColor: "#9a9590",
+        items: [
+          { name: "Toilet paper (Kirkland)", qty: "30 pack", detail: "The classic Costco buy", tag: "pantry" },
+          { name: "Paper towels", qty: "12 pack", detail: "", tag: "pantry" },
+          { name: "Laundry detergent", qty: "1 tub", detail: "Kirkland pods or liquid", tag: "pantry" },
+          { name: "Dishwashing liquid", qty: "1 bottle", detail: "", tag: "pantry" },
+          { name: "Glad wrap / zip-lock bags", qty: "1 box each", detail: "You'll need these for portioning meat", tag: "pantry" },
+          { name: "Aluminium foil (large roll)", qty: "1 roll", detail: "", tag: "pantry" },
+        ]
+      }
+    ],
+    bottomTip: `<strong>Chest freezer strategy:</strong> When you get home, set up a portioning station. Lay out zip-lock bags, kitchen scales, and a marker. Portion all meat into 500g packs, press flat (stacks better, thaws faster), label with contents and date. Stand bags upright in the chest freezer like files in a drawer — you'll fit far more than laying them flat. Put oldest stock on top.`
+  },
+  aldi: {
+    topTip: `<strong>Top-up run — do this a few days after Costco.</strong> Fill the gaps with things Costco doesn't carry well or where you want smaller quantities. Budget ~$60–90.`,
+    aisles: [
+      {
+        name: "Fresh & Bakery", icon: "🍞", iconBg: "rgba(200,169,110,0.12)", iconColor: "#c8a96e",
+        items: [
+          { name: "Sliced bread (×2 loaves)", qty: "2 loaves", detail: "Freeze immediately — lasts 3+ months", tag: "freezer" },
+          { name: "Long-life wraps / tortillas", qty: "2 packs", detail: "4–6 week shelf life in pantry", tag: "pantry" },
+          { name: "Bananas (ripe)", qty: "1 kg", detail: "Peel, chop, freeze on tray then bag", tag: "freezer" },
+        ]
+      },
+      {
+        name: "Canned & Jarred", icon: "🫙", iconBg: "rgba(148,120,167,0.12)", iconColor: "#9478a7",
+        items: [
+          { name: "Canned corn", qty: "4 tins", detail: "", tag: "pantry" },
+          { name: "Canned salmon", qty: "4 tins", detail: "Variety from the tuna at Costco", tag: "pantry" },
+          { name: "Pasta sauce (jarred)", qty: "3 jars", detail: "Quick meal fallback", tag: "pantry" },
+          { name: "Passata (tomato)", qty: "2 bottles", detail: "700ml, base for sauces", tag: "pantry" },
+          { name: "Pickles / gherkins", qty: "1 jar", detail: "", tag: "pantry" },
+          { name: "Olives", qty: "1 jar", detail: "", tag: "pantry" },
+          { name: "Sundried tomatoes", qty: "1 jar", detail: "", tag: "pantry" },
+          { name: "Jam / marmalade", qty: "1 jar", detail: "", tag: "pantry" },
+        ]
+      },
+      {
+        name: "Pantry Fills", icon: "🧂", iconBg: "rgba(95,166,95,0.12)", iconColor: "#5fa65f",
+        items: [
+          { name: "Plain flour", qty: "2 kg", detail: "Bread, baking, thickening", tag: "pantry" },
+          { name: "Sugar", qty: "1 kg", detail: "", tag: "pantry" },
+          { name: "Salt", qty: "1 kg", detail: "", tag: "pantry" },
+          { name: "Vegemite", qty: "1 jar", detail: "B vitamins, toast staple", tag: "pantry" },
+          { name: "Soy sauce", qty: "1 bottle", detail: "500ml", tag: "pantry" },
+          { name: "Stock cubes (chicken + veg)", qty: "2 packs", detail: "", tag: "pantry" },
+          { name: "Dried apricots", qty: "500g", detail: "Snack, baking", tag: "pantry" },
+          { name: "Crackers / crispbread", qty: "2 packs", detail: "With cheese, PB, tuna", tag: "pantry" },
+          { name: "Dried herbs/spices top-up", qty: "As needed", detail: "Cumin, paprika, oregano, chilli", tag: "pantry" },
+          { name: "Tea bags", qty: "1 box", detail: "If not covered at Costco", tag: "pantry" },
+        ]
+      },
+      {
+        name: "Medical & Misc", icon: "💊", iconBg: "rgba(224,60,49,0.08)", iconColor: "#e06450",
+        items: [
+          { name: "Paracetamol", qty: "1 pack", detail: "Check expiry on existing stock first", tag: "pantry" },
+          { name: "Ibuprofen", qty: "1 pack", detail: "", tag: "pantry" },
+          { name: "Bandaids / antiseptic", qty: "Top up", detail: "Basic first aid", tag: "pantry" },
+          { name: "Batteries (AA + AAA)", qty: "1 pack each", detail: "Torches, remotes", tag: "pantry" },
+        ]
+      }
+    ],
+    bottomTip: `<strong>Freezing bananas:</strong> Wait until they're spotty-ripe (sweeter). Peel, chop into coins, spread on a baking tray lined with baking paper. Freeze 2 hours until solid, then bag. They won't clump together and you can grab what you need for smoothies.`
+  }
+};
+
+let checked = {};
+try { checked = JSON.parse(localStorage.getItem('shop-planner') || '{}'); } catch(e) {}
+function save() { try { localStorage.setItem('shop-planner', JSON.stringify(checked)); } catch(e) {} }
+
+let activeTab = 'costco';
+
+function switchTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.${tab}-tab`).classList.add('active');
+  document.querySelectorAll('.store-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(`${tab}-panel`).classList.add('active');
+  updateCounts();
+}
+
+function toggle(key) {
+  checked[key] = !checked[key];
+  save();
+  renderStore(activeTab);
+  updateCounts();
+  updateProgress();
+}
+
+function getStoreItems(storeKey) {
+  return stores[storeKey].aisles.reduce((arr, a, ai) => {
+    a.items.forEach((item, ii) => arr.push({ key: `${storeKey}-${ai}-${ii}`, ...item }));
+    return arr;
+  }, []);
+}
+
+function updateCounts() {
+  ['costco', 'aldi'].forEach(store => {
+    const items = getStoreItems(store);
+    const done = items.filter(i => checked[i.key]).length;
+    document.getElementById(`${store}-count`).textContent = `${done} / ${items.length}`;
+  });
+}
+
+function updateProgress() {
+  const all = [...getStoreItems('costco'), ...getStoreItems('aldi')];
+  const done = all.filter(i => checked[i.key]).length;
+  document.getElementById('progress').style.width = `${(done / all.length) * 100}%`;
+}
+
+function renderStore(storeKey) {
+  const store = stores[storeKey];
+  const panel = document.getElementById(`${storeKey}-panel`);
+  let html = `<div class="tip">${store.topTip}</div>`;
+
+  store.aisles.forEach((aisle, ai) => {
+    const aisleDone = aisle.items.filter((_, ii) => checked[`${storeKey}-${ai}-${ii}`]).length;
+    html += `<div class="aisle">`;
+    html += `<div class="aisle-header">`;
+    html += `<div class="aisle-icon" style="background:${aisle.iconBg};color:${aisle.iconColor}">${aisle.icon}</div>`;
+    html += `<div class="aisle-name">${aisle.name}</div>`;
+    html += `<div class="aisle-progress">${aisleDone}/${aisle.items.length}</div>`;
+    html += `</div>`;
+
+    aisle.items.forEach((item, ii) => {
+      const key = `${storeKey}-${ai}-${ii}`;
+      const isDone = checked[key];
+      const badge = item.tag === 'freezer'
+        ? `<span class="badge badge-freezer">❄️ Freezer</span>`
+        : `<span class="badge badge-pantry">Pantry</span>`;
+      html += `<div class="item ${isDone ? 'done' : ''}" onclick="toggle('${key}')">`;
+      html += `<div class="check">${isDone ? '✓' : ''}</div>`;
+      html += `<div><div class="item-name">${item.name} ${badge}</div>`;
+      if (item.detail) html += `<div class="item-detail">${item.detail}</div>`;
+      html += `</div>`;
+      html += `<div class="item-qty">${item.qty}</div>`;
+      html += `</div>`;
+    });
+
+    html += `</div>`;
+  });
+
+  html += `<div class="tip freezer-tip">${store.bottomTip}</div>`;
+
+  if (storeKey === 'costco') {
+    html += `<div class="summary"><div class="summary-val">~$280–350</div><div class="summary-label">Estimated Costco run</div></div>`;
+  } else {
+    html += `<div class="summary"><div class="summary-val">~$60–90</div><div class="summary-label">Estimated Aldi / Woolies top-up</div></div>`;
+  }
+
+  panel.innerHTML = html;
+}
+
+renderStore('costco');
+renderStore('aldi');
+updateCounts();
+updateProgress();
+</script>
+
+</body>
+</html>
