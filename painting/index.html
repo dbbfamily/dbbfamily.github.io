@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>House Colour Schemes — Rivett</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0ea;
+    --text: #2c2a27;
+    --muted: #7a756d;
+    --card-bg: #ffffff;
+    --border: #e0dbd3;
+  }
+
+- { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+font-family: ‘DM Sans’, sans-serif;
+background: var(–bg);
+color: var(–text);
+padding: 24px 16px;
+max-width: 900px;
+margin: 0 auto;
+-webkit-font-smoothing: antialiased;
+}
+
+h1 {
+font-family: ‘DM Serif Display’, serif;
+font-size: 28px;
+margin-bottom: 6px;
+letter-spacing: -0.5px;
+}
+
+.subtitle {
+color: var(–muted);
+font-size: 14px;
+margin-bottom: 32px;
+line-height: 1.5;
+}
+
+.scheme {
+background: var(–card-bg);
+border: 1px solid var(–border);
+border-radius: 16px;
+padding: 24px;
+margin-bottom: 24px;
+box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.scheme-header {
+display: flex;
+align-items: baseline;
+gap: 12px;
+margin-bottom: 6px;
+}
+
+.scheme-number {
+font-family: ‘DM Serif Display’, serif;
+font-size: 14px;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 1.5px;
+}
+
+.scheme-name {
+font-family: ‘DM Serif Display’, serif;
+font-size: 22px;
+}
+
+.scheme-desc {
+color: var(–muted);
+font-size: 13px;
+line-height: 1.6;
+margin-bottom: 20px;
+}
+
+.palette {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+gap: 12px;
+margin-bottom: 16px;
+}
+
+.swatch {
+border-radius: 12px;
+overflow: hidden;
+border: 1px solid var(–border);
+}
+
+.swatch-color {
+height: 90px;
+position: relative;
+}
+
+.swatch-color::after {
+content: ‘’;
+position: absolute;
+bottom: 0;
+left: 0;
+right: 0;
+height: 20px;
+background: linear-gradient(transparent, rgba(0,0,0,0.06));
+}
+
+.swatch-info {
+padding: 10px 12px;
+background: white;
+}
+
+.swatch-role {
+font-size: 11px;
+font-weight: 600;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+color: var(–muted);
+margin-bottom: 2px;
+}
+
+.swatch-name {
+font-size: 13px;
+font-weight: 500;
+margin-bottom: 1px;
+}
+
+.swatch-code {
+font-size: 11px;
+color: var(–muted);
+font-family: monospace;
+}
+
+.house-preview {
+border-radius: 12px;
+overflow: hidden;
+margin-bottom: 16px;
+position: relative;
+height: 200px;
+}
+
+.house-svg {
+width: 100%;
+height: 100%;
+}
+
+.notes {
+background: var(–bg);
+border-radius: 10px;
+padding: 14px 16px;
+font-size: 13px;
+line-height: 1.6;
+color: var(–muted);
+}
+
+.notes strong {
+color: var(–text);
+}
+
+.colorbond-tag {
+display: inline-block;
+background: var(–bg);
+border: 1px solid var(–border);
+border-radius: 6px;
+padding: 2px 8px;
+font-size: 11px;
+color: var(–muted);
+margin-left: 4px;
+}
+
+.current-label {
+display: inline-block;
+background: #e8e3db;
+border-radius: 6px;
+padding: 3px 10px;
+font-size: 11px;
+font-weight: 600;
+color: var(–muted);
+margin-bottom: 16px;
+text-transform: uppercase;
+letter-spacing: 0.8px;
+}
+
+@media (max-width: 500px) {
+.palette {
+grid-template-columns: repeat(2, 1fr);
+}
+.house-preview {
+height: 160px;
+}
+}
+</style>
+
+</head>
+<body>
+
+<h1>Colour Schemes for Rivett</h1>
+<p class="subtitle">Three palettes designed around the bullnose verandah and acrylic render — repositioning the 90s renovation as a heritage feature. All colours reference Dulux and Colorbond ranges available at Bunnings.</p>
+
+<!-- CURRENT -->
+
+<div class="scheme" style="opacity: 0.7;">
+  <div class="current-label">Current</div>
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background: #c9a96e;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Walls</div>
+        <div class="swatch-name">Sandy Ochre</div>
+        <div class="swatch-code">(existing render)</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #6b6b6b;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Trim</div>
+        <div class="swatch-name">Weathered Grey</div>
+        <div class="swatch-code">(existing trim)</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #505050;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Roof / Bullnose</div>
+        <div class="swatch-name">Dark Charcoal</div>
+        <div class="swatch-code">(existing iron)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCHEME 1 -->
+
+<div class="scheme">
+  <div class="scheme-header">
+    <span class="scheme-number">Scheme 01</span>
+  </div>
+  <h2 class="scheme-name">Heritage Cream & Woodland</h2>
+  <p class="scheme-desc">The safest option — warm heritage cream walls with deep grey-green trim. Broadly appealing, reads as "well-maintained character home." The existing bullnose iron stays as-is or gets a fresh coat of Woodland Grey.</p>
+
+  <svg class="house-svg" viewBox="0 0 800 360" style="max-height:200px;">
+    <!-- Sky -->
+    <rect width="800" height="360" fill="#d4e4ed"/>
+    <!-- Ground -->
+    <rect y="280" width="800" height="80" fill="#8a9a6b"/>
+    <!-- Garden bed -->
+    <rect x="100" y="260" width="500" height="20" rx="4" fill="#6b7a52"/>
+    <!-- Main wall -->
+    <rect x="100" y="120" width="600" height="160" fill="#e8dcc8"/>
+    <!-- Gable -->
+    <polygon points="400,30 100,120 700,120" fill="#e8dcc8"/>
+    <polygon points="400,30 100,120 700,120" fill="none" stroke="#4a5445" stroke-width="4"/>
+    <!-- Gable vent -->
+    <circle cx="400" cy="85" r="15" fill="#4a5445"/>
+    <!-- Bullnose verandah roof -->
+    <path d="M 80 120 Q 80 155, 120 160 L 680 160 Q 720 155, 720 120" fill="#4a5445" stroke="#3d4a3d" stroke-width="1"/>
+    <!-- Verandah posts -->
+    <rect x="180" y="160" width="8" height="120" fill="#4a5445"/>
+    <rect x="400" y="160" width="8" height="120" fill="#4a5445"/>
+    <rect x="610" y="160" width="8" height="120" fill="#4a5445"/>
+    <!-- Windows -->
+    <rect x="160" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#4a5445" stroke-width="4"/>
+    <rect x="300" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#4a5445" stroke-width="4"/>
+    <rect x="440" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#4a5445" stroke-width="4"/>
+    <!-- Door -->
+    <rect x="580" y="170" width="50" height="90" rx="2" fill="#6b3030" stroke="#4a5445" stroke-width="4"/>
+    <!-- Roof ridge -->
+    <line x1="100" y1="120" x2="700" y2="120" stroke="#4a5445" stroke-width="5"/>
+  </svg>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background: #e8dcc8;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Walls</div>
+        <div class="swatch-name">Dulux Bleached Pine</div>
+        <div class="swatch-code">#e8dcc8</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #4a5445;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Trim & Fascia</div>
+        <div class="swatch-name">Colorbond Woodland Grey</div>
+        <div class="swatch-code">#4a5445</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #4a5445;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Bullnose / Roof</div>
+        <div class="swatch-name">Colorbond Woodland Grey</div>
+        <div class="swatch-code">#4a5445</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #6b3030;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Front Door</div>
+        <div class="swatch-name">Dulux Henna Red</div>
+        <div class="swatch-code">#6b3030</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>Why it works:</strong> The cream lifts the render out of "90s Tuscan" territory into heritage-neutral. Woodland Grey on trim unifies the bullnose, fascia, and posts into one deliberate frame. Heritage red door adds character without risk. Broadest buyer appeal.
+  </div>
+</div>
+
+<!-- SCHEME 2 -->
+
+<div class="scheme">
+  <div class="scheme-header">
+    <span class="scheme-number">Scheme 02</span>
+  </div>
+  <h2 class="scheme-name">Sage & Basalt</h2>
+  <p class="scheme-desc">A bolder move — muted sage-green walls with dark basalt trim. Gives the house a curated, contemporary-heritage feel. The bullnose becomes a design feature rather than something to apologise for.</p>
+
+  <svg class="house-svg" viewBox="0 0 800 360" style="max-height:200px;">
+    <rect width="800" height="360" fill="#d4e4ed"/>
+    <rect y="280" width="800" height="80" fill="#8a9a6b"/>
+    <rect x="100" y="260" width="500" height="20" rx="4" fill="#6b7a52"/>
+    <rect x="100" y="120" width="600" height="160" fill="#c5cdb8"/>
+    <polygon points="400,30 100,120 700,120" fill="#c5cdb8"/>
+    <polygon points="400,30 100,120 700,120" fill="none" stroke="#3a3a3a" stroke-width="4"/>
+    <circle cx="400" cy="85" r="15" fill="#3a3a3a"/>
+    <path d="M 80 120 Q 80 155, 120 160 L 680 160 Q 720 155, 720 120" fill="#3a3a3a" stroke="#2e2e2e" stroke-width="1"/>
+    <rect x="180" y="160" width="8" height="120" fill="#3a3a3a"/>
+    <rect x="400" y="160" width="8" height="120" fill="#3a3a3a"/>
+    <rect x="610" y="160" width="8" height="120" fill="#3a3a3a"/>
+    <rect x="160" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#3a3a3a" stroke-width="4"/>
+    <rect x="300" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#3a3a3a" stroke-width="4"/>
+    <rect x="440" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#3a3a3a" stroke-width="4"/>
+    <rect x="580" y="170" width="50" height="90" rx="2" fill="#1a2a3a" stroke="#3a3a3a" stroke-width="4"/>
+    <line x1="100" y1="120" x2="700" y2="120" stroke="#3a3a3a" stroke-width="5"/>
+  </svg>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background: #c5cdb8;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Walls</div>
+        <div class="swatch-name">Dulux Pale Tendril</div>
+        <div class="swatch-code">#c5cdb8</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #3a3a3a;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Trim & Fascia</div>
+        <div class="swatch-name">Colorbond Basalt</div>
+        <div class="swatch-code">#3a3a3a</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #3a3a3a;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Bullnose / Roof</div>
+        <div class="swatch-name">Colorbond Basalt</div>
+        <div class="swatch-code">#3a3a3a</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #1a2a3a;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Front Door</div>
+        <div class="swatch-name">Dulux Deepest Navy</div>
+        <div class="swatch-code">#1a2a3a</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>Why it works:</strong> Sage green is having a moment in Australian residential design — it reads as both natural and considered. The dark basalt trim gives the bullnose a modern-heritage crispness. Navy door adds sophistication. Appeals to design-conscious buyers and sits beautifully in the Weston Creek bush setting.
+  </div>
+</div>
+
+<!-- SCHEME 3 -->
+
+<div class="scheme">
+  <div class="scheme-header">
+    <span class="scheme-number">Scheme 03</span>
+  </div>
+  <h2 class="scheme-name">Warm Stone & Monument</h2>
+  <p class="scheme-desc">Splits the difference — a warm stone/putty wall that's more sophisticated than cream but less committal than sage. Deep charcoal Monument trim gives a sharp, contemporary edge while respecting the period feel.</p>
+
+  <svg class="house-svg" viewBox="0 0 800 360" style="max-height:200px;">
+    <rect width="800" height="360" fill="#d4e4ed"/>
+    <rect y="280" width="800" height="80" fill="#8a9a6b"/>
+    <rect x="100" y="260" width="500" height="20" rx="4" fill="#6b7a52"/>
+    <rect x="100" y="120" width="600" height="160" fill="#d5cbbe"/>
+    <polygon points="400,30 100,120 700,120" fill="#d5cbbe"/>
+    <polygon points="400,30 100,120 700,120" fill="none" stroke="#555555" stroke-width="4"/>
+    <circle cx="400" cy="85" r="15" fill="#555555"/>
+    <path d="M 80 120 Q 80 155, 120 160 L 680 160 Q 720 155, 720 120" fill="#555555" stroke="#484848" stroke-width="1"/>
+    <rect x="180" y="160" width="8" height="120" fill="#555555"/>
+    <rect x="400" y="160" width="8" height="120" fill="#555555"/>
+    <rect x="610" y="160" width="8" height="120" fill="#555555"/>
+    <rect x="160" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#555555" stroke-width="4"/>
+    <rect x="300" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#555555" stroke-width="4"/>
+    <rect x="440" y="180" width="80" height="60" rx="2" fill="#a8bcc4" stroke="#555555" stroke-width="4"/>
+    <rect x="580" y="170" width="50" height="90" rx="2" fill="#2d4a2d" stroke="#555555" stroke-width="4"/>
+    <line x1="100" y1="120" x2="700" y2="120" stroke="#555555" stroke-width="5"/>
+  </svg>
+
+  <div class="palette">
+    <div class="swatch">
+      <div class="swatch-color" style="background: #d5cbbe;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Walls</div>
+        <div class="swatch-name">Dulux Limed White</div>
+        <div class="swatch-code">#d5cbbe</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #555555;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Trim & Fascia</div>
+        <div class="swatch-name">Colorbond Monument</div>
+        <div class="swatch-code">#555555</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #555555;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Bullnose / Roof</div>
+        <div class="swatch-name">Colorbond Monument</div>
+        <div class="swatch-code">#555555</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-color" style="background: #2d4a2d;"></div>
+      <div class="swatch-info">
+        <div class="swatch-role">Front Door</div>
+        <div class="swatch-name">Dulux Brunswick Green</div>
+        <div class="swatch-code">#2d4a2d</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="notes">
+    <strong>Why it works:</strong> Warm stone tones are the most timeless option for rendered homes in Canberra — they handle the harsh light well across seasons. Monument is the most popular Colorbond trim colour in Australia right now, so it signals "recently updated." Bottle green door nods to heritage without being predictable. The middle-ground pick.
+  </div>
+</div>
+
+<div class="notes" style="margin-top: 8px;">
+  <strong>Next steps:</strong> Grab sample pots from Bunnings for your top pick. Paint a 1m² test patch on the front-facing wall — Canberra's harsh western sun will shift these colours significantly between morning and afternoon. Also check the render for any hollow spots (tap test) before committing to a painter. For the bullnose iron, a Colorbond-matched spray in the trim colour will unify everything.
+</div>
+
+</body>
+</html>
