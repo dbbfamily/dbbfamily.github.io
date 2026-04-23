@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15-Min Circuit</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600&display=swap');
+
+:root {
+–bg: #0d0f0e;
+–panel: #141816;
+–border: #2a2f2b;
+–accent: #c8f060;
+–accent2: #60f0c8;
+–warn: #f0c060;
+–text: #d4dbd5;
+–muted: #5a6b5c;
+–red: #f06060;
+}
+
+- { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘IBM Plex Sans’, sans-serif;
+min-height: 100vh;
+padding: 24px 16px 40px;
+}
+
+/* HEADER */
+.header {
+display: flex;
+align-items: baseline;
+gap: 16px;
+margin-bottom: 28px;
+border-bottom: 1px solid var(–border);
+padding-bottom: 14px;
+}
+
+.header h1 {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 2.8rem;
+letter-spacing: 0.06em;
+color: var(–accent);
+line-height: 1;
+}
+
+.header .sub {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.68rem;
+color: var(–muted);
+letter-spacing: 0.12em;
+text-transform: uppercase;
+}
+
+/* STRUCTURE STRIP */
+.structure {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 8px;
+margin-bottom: 24px;
+}
+
+.stat {
+background: var(–panel);
+border: 1px solid var(–border);
+border-top: 2px solid var(–accent);
+padding: 10px 14px;
+}
+
+.stat .val {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.9rem;
+color: var(–accent);
+letter-spacing: 0.04em;
+line-height: 1;
+}
+
+.stat .lbl {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+margin-top: 3px;
+}
+
+/* FLOW */
+.flow-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.15em;
+margin-bottom: 10px;
+}
+
+.round-block {
+margin-bottom: 6px;
+}
+
+.round-header {
+display: flex;
+align-items: center;
+gap: 10px;
+margin-bottom: 6px;
+}
+
+.round-num {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 0.85rem;
+color: var(–bg);
+background: var(–muted);
+padding: 2px 8px;
+letter-spacing: 0.08em;
+}
+
+.round-time {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+color: var(–muted);
+}
+
+/* EXERCISE CARD */
+.exercise {
+display: grid;
+grid-template-columns: 28px 1fr auto;
+align-items: start;
+gap: 0;
+background: var(–panel);
+border: 1px solid var(–border);
+border-left: 3px solid var(–border);
+margin-bottom: 4px;
+padding: 10px 12px;
+position: relative;
+transition: border-left-color 0.15s;
+}
+
+.exercise:hover {
+border-left-color: var(–accent);
+}
+
+.ex-num {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.1rem;
+color: var(–muted);
+line-height: 1;
+padding-top: 1px;
+}
+
+.ex-body {
+padding-left: 6px;
+}
+
+.ex-name {
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-weight: 600;
+font-size: 0.85rem;
+color: var(–text);
+letter-spacing: 0.02em;
+line-height: 1.2;
+}
+
+.ex-detail {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.62rem;
+color: var(–muted);
+margin-top: 3px;
+line-height: 1.5;
+}
+
+.ex-note {
+font-size: 0.6rem;
+color: var(–accent2);
+margin-top: 3px;
+font-family: ‘IBM Plex Mono’, monospace;
+}
+
+.ex-metric {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.3rem;
+color: var(–accent);
+text-align: right;
+line-height: 1;
+white-space: nowrap;
+}
+
+.ex-unit {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.55rem;
+color: var(–muted);
+text-align: right;
+display: block;
+}
+
+/* CONNECTOR */
+.connector {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 3px 0 3px 38px;
+margin-bottom: 2px;
+}
+
+.connector-line {
+width: 1px;
+height: 14px;
+background: var(–border);
+margin-left: 13px;
+}
+
+.connector-text {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.55rem;
+color: var(–muted);
+letter-spacing: 0.1em;
+}
+
+/* REST BLOCK */
+.rest-block {
+display: flex;
+align-items: center;
+justify-content: space-between;
+background: #111410;
+border: 1px dashed var(–border);
+padding: 7px 12px;
+margin: 8px 0 10px;
+}
+
+.rest-label {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.12em;
+}
+
+.rest-time {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1.1rem;
+color: var(–warn);
+}
+
+/* PROGRESSION TABLE */
+.prog-section {
+margin-top: 24px;
+}
+
+.prog-table {
+width: 100%;
+border-collapse: collapse;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.65rem;
+}
+
+.prog-table th {
+text-align: left;
+color: var(–muted);
+text-transform: uppercase;
+letter-spacing: 0.1em;
+padding: 6px 10px;
+border-bottom: 1px solid var(–border);
+font-weight: 400;
+}
+
+.prog-table td {
+padding: 8px 10px;
+border-bottom: 1px solid #1a1e1b;
+color: var(–text);
+vertical-align: top;
+line-height: 1.4;
+}
+
+.prog-table tr:hover td {
+background: var(–panel);
+}
+
+.week-badge {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: 1rem;
+color: var(–accent);
+letter-spacing: 0.04em;
+}
+
+/* FLAGS */
+.flags {
+margin-top: 20px;
+border: 1px solid var(–border);
+border-top: 2px solid var(–red);
+}
+
+.flags-header {
+padding: 6px 12px;
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+text-transform: uppercase;
+letter-spacing: 0.12em;
+color: var(–red);
+background: #1a1010;
+}
+
+.flag-item {
+display: flex;
+align-items: flex-start;
+gap: 10px;
+padding: 8px 12px;
+border-bottom: 1px solid #1a1e1b;
+}
+
+.flag-dot {
+width: 6px;
+height: 6px;
+border-radius: 50%;
+background: var(–red);
+flex-shrink: 0;
+margin-top: 4px;
+}
+
+.flag-text {
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-size: 0.72rem;
+color: var(–text);
+line-height: 1.5;
+}
+
+.flag-text strong {
+color: var(–warn);
+font-weight: 600;
+}
+
+/* BREATHING BANNER */
+.breathing-banner {
+background: linear-gradient(135deg, #0d1a10 0%, #0d1510 100%);
+border: 1px solid #1e3a22;
+border-left: 3px solid var(–accent2);
+padding: 10px 14px;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 12px;
+}
+
+.bb-icon {
+font-size: 1.2rem;
+flex-shrink: 0;
+}
+
+.bb-text {
+font-family: ‘IBM Plex Sans’, sans-serif;
+font-size: 0.72rem;
+color: var(–accent2);
+line-height: 1.5;
+}
+
+.bb-text strong {
+font-weight: 600;
+}
+
+/* REPEAT ARROW */
+.repeat-flow {
+display: flex;
+align-items: center;
+gap: 8px;
+padding: 8px 0;
+margin: 4px 0 8px;
+}
+
+.repeat-arrow {
+font-size: 1rem;
+color: var(–accent);
+}
+
+.repeat-text {
+font-family: ‘IBM Plex Mono’, monospace;
+font-size: 0.6rem;
+color: var(–muted);
+letter-spacing: 0.1em;
+text-transform: uppercase;
+}
+
+.section-divider {
+height: 1px;
+background: var(–border);
+margin: 20px 0;
+}
+</style>
+
+</head>
+<body>
+
+  <!-- HEADER -->
+
+  <div class="header">
+    <h1>15-MIN CIRCUIT</h1>
+    <div class="sub">No-jump · Nasal breathing · Post-op adapted</div>
+  </div>
+
+  <!-- STRUCTURE -->
+
+  <div class="structure">
+    <div class="stat">
+      <div class="val">3</div>
+      <div class="lbl">Rounds</div>
+    </div>
+    <div class="stat">
+      <div class="val">5</div>
+      <div class="lbl">Exercises</div>
+    </div>
+    <div class="stat">
+      <div class="val">50s</div>
+      <div class="lbl">Work / 10s rest</div>
+    </div>
+  </div>
+
+  <!-- BREATHING BANNER -->
+
+  <div class="breathing-banner">
+    <div class="bb-icon">🫁</div>
+    <div class="bb-text"><strong>Nasal breathing throughout.</strong> If you break to mouth-breathe, slow down — don't push through. This is active breathing rehab, not just a rule.</div>
+  </div>
+
+  <!-- FLOW -->
+
+  <div class="flow-label">Circuit Flow — Repeat × 3</div>
+
+  <!-- ROUND -->
+
+  <div class="round-block">
+
+```
+<!-- EX 1 -->
+<div class="exercise">
+  <div class="ex-num">01</div>
+  <div class="ex-body">
+    <div class="ex-name">Slow Push-Up</div>
+    <div class="ex-detail">3s down · 1s up · Head neutral</div>
+    <div class="ex-note">↑ Keep head in line — no FHP collapse</div>
+  </div>
+  <div>
+    <div class="ex-metric">8–12</div>
+    <span class="ex-unit">REPS</span>
+  </div>
+</div>
+
+<div class="connector"><div class="connector-line"></div></div>
+
+<!-- EX 2 -->
+<div class="exercise">
+  <div class="ex-num">02</div>
+  <div class="ex-body">
+    <div class="ex-name">Bodyweight Squat</div>
+    <div class="ex-detail">Full depth · Controlled tempo</div>
+    <div class="ex-note">↑ Zero sinus pressure</div>
+  </div>
+  <div>
+    <div class="ex-metric">15</div>
+    <span class="ex-unit">REPS</span>
+  </div>
+</div>
+
+<div class="connector"><div class="connector-line"></div></div>
+
+<!-- EX 3 -->
+<div class="exercise">
+  <div class="ex-num">03</div>
+  <div class="ex-body">
+    <div class="ex-name">Dead-Hang / Scapular Hold</div>
+    <div class="ex-detail">Bar: hang + depress scapula · No bar: prone Y-T-W</div>
+    <div class="ex-note">↑ Directly counters FHP · Spinal decompression</div>
+  </div>
+  <div>
+    <div class="ex-metric">30s</div>
+    <span class="ex-unit">HOLD</span>
+  </div>
+</div>
+
+<div class="connector"><div class="connector-line"></div></div>
+
+<!-- EX 4 -->
+<div class="exercise">
+  <div class="ex-num">04</div>
+  <div class="ex-body">
+    <div class="ex-name">Plank</div>
+    <div class="ex-detail">Forearms or hands · Exhale on hold</div>
+    <div class="ex-note">↑ Never hold breath — valsalva risk</div>
+  </div>
+  <div>
+    <div class="ex-metric">45s</div>
+    <span class="ex-unit">HOLD</span>
+  </div>
+</div>
+
+<div class="connector"><div class="connector-line"></div></div>
+
+<!-- EX 5 -->
+<div class="exercise">
+  <div class="ex-num">05</div>
+  <div class="ex-body">
+    <div class="ex-name">Reverse Lunge</div>
+    <div class="ex-detail">Step back · Knee above ankle · Upright torso</div>
+    <div class="ex-note">↑ Unilateral · No spinal load</div>
+  </div>
+  <div>
+    <div class="ex-metric">10</div>
+    <span class="ex-unit">EACH LEG</span>
+  </div>
+</div>
+```
+
+  </div>
+
+  <!-- REST -->
+
+  <div class="rest-block">
+    <div class="rest-label">Rest between rounds</div>
+    <div class="rest-time">60–90s</div>
+  </div>
+
+  <!-- REPEAT -->
+
+  <div class="repeat-flow">
+    <div class="repeat-arrow">↻</div>
+    <div class="repeat-text">Repeat × 3 total rounds → Done in ~15 min</div>
+  </div>
+
+  <div class="section-divider"></div>
+
+  <!-- PROGRESSION -->
+
+  <div class="prog-section">
+    <div class="flow-label" style="margin-bottom:12px;">Weekly Progression</div>
+    <table class="prog-table">
+      <thead>
+        <tr>
+          <th>Week</th>
+          <th>Focus</th>
+          <th>Change</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="week-badge">W1–2</span></td>
+          <td>Form + nasal breathing</td>
+          <td>Learn the circuit. Zero ego. Nasal breathing is the constraint.</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W3</span></td>
+          <td>Volume increase</td>
+          <td>Add 4th round OR increase reps by 20%</td>
+        </tr>
+        <tr>
+          <td><span class="week-badge">W4</span></td>
+          <td>Difficulty increase</td>
+          <td>Elevate push-up feet · Add pull-up if bar available</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FLAGS -->
+
+  <div class="flags" style="margin-top:20px;">
+    <div class="flags-header">⚑ Post-Op Constraints</div>
+    <div class="flag-item">
+      <div class="flag-dot"></div>
+      <div class="flag-text"><strong>No prone face-down pressure</strong> — e.g. standard cobra pose. Until Chan clears 26 May.</div>
+    </div>
+    <div class="flag-item">
+      <div class="flag-dot"></div>
+      <div class="flag-text"><strong>No valsalva</strong> — exhale on exertion, never hold breath through effort.</div>
+    </div>
+    <div class="flag-item">
+      <div class="flag-dot"></div>
+      <div class="flag-text"><strong>Post-exercise congestion</strong> — notable sinus pressure = dial back intensity, not a red flag but feedback to act on.</div>
+    </div>
+    <div class="flag-item" style="border-bottom:none;">
+      <div class="flag-dot"></div>
+      <div class="flag-text"><strong>Head neutral on push-ups</strong> — no dropping or craning. FHP active condition — reinforce alignment.</div>
+    </div>
+  </div>
+
+</body>
+</html>
