@@ -1,10 +1,12 @@
+---
 skills:
-  - id: kid-friendly-adaptation
-    title: Kid-friendly adaptation
-    summary: Build a mild base first, then add heat, acid, strong herbs, or toppings later.
-  - id: pantry-sauce-selection
-    title: Pantry sauce selection
-    summary: Choose sauces by whether you need salt, body, glaze, sweetness, acid, or savoury depth.
-  - id: appliance-choice
-    title: Appliance choice
-    summary: Pick TM7, air fryer, wok, oven, or BBQ based on the texture and workflow you need.
+- id: kid-friendly-adaptation
+  title: Kid-friendly adaptation
+  summary: Build a mild base first, then add heat, acid, strong herbs, or crunchy
+    toppings at the table or after pulling out a plain portion.
+- id: pantry-sauce-selection
+  title: Pantry sauce selection
+  summary: "- Soy sauce brings salt and savoury depth."
+- id: appliance-choice
+  title: Appliance choice
+  summary: "- TM7 for sauces, steaming, braising, rice, grains, and scale-based repeatability."

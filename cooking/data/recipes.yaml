@@ -1,99 +1,274 @@
+---
 recipes:
-  - id: banana-milo-smoothie
-    title: Banana Milo Smoothie
-    category: smoothie
-    method: blend
-    appliance: TM7
-    base_servings: 4
-    description: TM7 banana Milo smoothie - thick, filling, and kid-friendly.
-    ingredients:
-      - { name: ripe bananas, broken into chunks, amount: 3, scales: true }
-      - { name: milk, unit: g, amount: 400, scales: true }
-      - { name: oats, unit: g, amount: 50, scales: true }
-      - { name: Milo, unit: g, amount: 40, scales: true }
-      - { name: Greek yoghurt, unit: g, amount: 120, scales: true }
-      - { name: honey, unit: g, amount: 15, scales: false }
-      - { name: cinnamon, unit: g, amount: 1, scales: false }
-      - { name: vanilla extract, unit: g, amount: 2, scales: false }
-      - { name: ice cubes, amount: 6, scales: true }
-    steps:
-      - { title: Mill oats, content: Add oats to TM7. Mill 15 sec / speed 10 to a fine powder., timer_seconds: 15 }
-      - { title: Blend, content: Add banana, milk, Milo, Greek yoghurt, honey, cinnamon, vanilla, and ice. Blend 30 sec / speed 8., timer_seconds: 30 }
-      - { title: Adjust, content: Check thickness. Add milk if too thick, or more ice if too thin. }
+- id: banana-milo-smoothie
+  title: Banana Milo Smoothie
+  category: smoothie
+  method: blend
+  appliance: TM7
+  base_servings: 4
+  description: 'TM7 banana Milo smoothie - thick, filling, and kid-friendly.
 
-  - id: slow-cook-bolognese
-    title: Slow-Cook Bolognese
-    category: beef
-    method: layered-simmer
-    appliance: TM7
-    base_servings: 6
-    description: TM7 layered no-scoop bolognese with soffritto, bacon, mince, and a long simmer.
-    ingredients:
-      - { name: beef mince, unit: g, amount: 750, scales: true }
-      - { name: diced bacon, unit: g, amount: 300, scales: true }
-      - { name: brown onion, quartered, amount: 1, scales: false }
-      - { name: carrot, roughly chopped, amount: 1, scales: false }
-      - { name: garlic cloves, amount: 3, scales: false }
-      - { name: tomato paste, unit: g, amount: 170, scales: true }
-      - { name: water or stock, unit: g, amount: 400, scales: true }
-      - { name: olive oil, unit: g, amount: 20, scales: false }
-      - { name: salt, unit: g, amount: 5, scales: false }
-      - { name: black pepper, unit: g, amount: 2, scales: false }
-      - { name: dried oregano, unit: g, amount: 3, scales: false }
-    steps:
-      - { title: Soffritto, content: Chop onion, carrot, and garlic. Add oil and saute 10 min / 120C / speed 1., timer_seconds: 600 }
-      - { title: Brown bacon, content: Add bacon on top of the soffritto. Brown 6 min / Intense Browning mode., timer_seconds: 360 }
-      - { title: Brown mince, content: Brown mince in two batches, 6 min / Intense each batch., timer_seconds: 720 }
-      - { title: Build sauce, content: Add tomato paste, water or stock, salt, pepper, and oregano. Stir 10 sec / speed 2 / reverse., timer_seconds: 10 }
-      - { title: Simmer, content: Cook 40 min / 100C / speed 1 / reverse / MC off., timer_seconds: 2400 }
+'
+  ingredients:
+  - name: ripe bananas, broken into chunks
+    amount: 3
+    scales: true
+  - name: milk
+    unit: g
+    amount: 400
+    scales: true
+  - name: oats
+    unit: g
+    amount: 50
+    scales: true
+  - name: Milo
+    unit: g
+    amount: 40
+    scales: true
+  - name: Greek yoghurt
+    unit: g
+    amount: 120
+    scales: true
+  - name: honey
+    unit: g
+    amount: 15
+    scales: false
+  - name: cinnamon
+    unit: g
+    amount: 1
+    scales: false
+  - name: vanilla extract
+    unit: g
+    amount: 2
+    scales: false
+  - name: ice cubes
+    amount: 6
+    scales: true
+  steps:
+  - title: Mill oats
+    content: Add oats to TM7. Mill 15 sec / speed 10 to a fine powder.
+    timer_seconds: 15
+  - title: Blend
+    content: Add banana, milk, Milo, Greek yoghurt, honey, cinnamon, vanilla, and
+      ice. Blend 30 sec / speed 8.
+    timer_seconds: 30
+  - title: Adjust
+    content: Check thickness. Too thick - add 50g milk, blend 10 sec / speed 6. Too
+      thin - add more ice cubes and blend again.
+- id: slow-cook-bolognese
+  title: Slow-Cook Bolognese
+  category: beef
+  method: layered-simmer
+  appliance: TM7
+  base_servings: 6
+  description: 'TM7 layered no-scoop bolognese. Soffritto first, bacon browned on
+    top, mince in two batches, then a long simmer for depth.
 
-  - id: smoky-chicken-taco-filling
-    title: Smoky Chicken Thigh Taco Filling
-    category: chicken
-    method: paste-braise-shred
-    appliance: TM7
-    base_servings: 2
-    description: Deeply spiced chicken taco filling braised in its own juices and shredded.
-    ingredients:
-      - { name: chicken thighs, whole, unit: g, amount: 300, scales: true }
-      - { name: garlic cloves, amount: 3, scales: false }
-      - { name: smoked paprika, unit: g, amount: 3, scales: false }
-      - { name: ground cumin, unit: g, amount: 3, scales: false }
-      - { name: chilli flakes, unit: g, amount: 2, scales: false }
-      - { name: dried oregano, unit: g, amount: 2, scales: false }
-      - { name: lime, juiced, amount: 1, scales: false }
-      - { name: olive oil, unit: g, amount: 15, scales: false }
-      - { name: salt, unit: g, amount: 3, scales: false }
-      - { name: fresh coriander stalks, amount: 1, scales: false }
-    steps:
-      - { title: Blend the paste, content: Blend aromatics, spices, lime, oil, salt, and coriander stalks 10 sec / speed 8. Scrape and repeat., timer_seconds: 10 }
-      - { title: Coat chicken, content: Add chicken and mix to coat 10 sec / speed 1., timer_seconds: 10 }
-      - { title: Braise, content: Cook 25 min / Varoma / speed 0.5., timer_seconds: 1500 }
-      - { title: Shred, content: Shred 5 sec / speed 4, keeping texture chunky., timer_seconds: 5 }
-      - { title: Reduce, content: Cook off excess liquid 3-5 min / 100C / speed 1 / MC off until glossy., timer_seconds: 240 }
+'
+  ingredients:
+  - name: beef mince
+    unit: g
+    amount: 750
+    scales: true
+  - name: diced bacon
+    unit: g
+    amount: 300
+    scales: true
+  - name: brown onion, quartered
+    amount: 1
+    scales: false
+  - name: carrot, roughly chopped
+    amount: 1
+    scales: false
+  - name: garlic cloves
+    amount: 3
+    scales: false
+  - name: tomato paste
+    unit: g
+    amount: 170
+    scales: true
+  - name: water or stock
+    unit: g
+    amount: 400
+    scales: true
+  - name: olive oil
+    unit: g
+    amount: 20
+    scales: false
+  - name: salt
+    unit: g
+    amount: 5
+    scales: false
+  - name: black pepper
+    unit: g
+    amount: 2
+    scales: false
+  - name: dried oregano
+    unit: g
+    amount: 3
+    scales: false
+  steps:
+  - title: Soffritto
+    content: Add onion, carrot, and garlic to TM7. Chop 5 sec / speed 5. Scrape down.
+      Add olive oil and saute 10 min / 120C / speed 1.
+    timer_seconds: 600
+  - title: Brown bacon
+    content: Add diced bacon directly on top of the soffritto. Brown 6 min / Intense
+      Browning mode. No scoop - it layers.
+    timer_seconds: 360
+  - title: Brown mince
+    content: Add half the beef mince. Brown 6 min / Intense. Add remaining mince and
+      brown a further 6 min / Intense.
+    timer_seconds: 720
+  - title: Build sauce
+    content: Add tomato paste, water or stock, salt, pepper, and oregano. Stir 10
+      sec / speed 2 / reverse.
+    timer_seconds: 10
+  - title: Simmer
+    content: Cook 40 min / 100C / speed 1 / reverse / MC off so liquid reduces.
+    timer_seconds: 2400
+  - title: Adjust texture
+    content: If chunky, blitz 3 sec / speed 4. If too wet, bump to 120C for 10-20
+      min with MC off to drive off liquid.
+- id: smoky-chicken-taco-filling
+  title: Smoky Chicken Thigh Taco Filling
+  category: chicken
+  method: paste-braise-shred
+  appliance: TM7
+  base_servings: 2
+  description: 'TM7 adult taco filling - deeply spiced, vibrant, braised in its own
+    juices, then shredded. Simplified smoked-paprika paste, no chipotle needed.
 
-  - id: dump-and-cook-chicken-taco-mix
-    title: Dump-and-Cook Chicken Taco Mix
-    category: chicken
-    method: dump-and-cook
-    appliance: TM7
-    base_servings: 2
-    description: All-in shredded chicken taco filling for speed and minimal mess.
-    ingredients:
-      - { name: chicken thighs, cut about 3cm, unit: g, amount: 300, scales: true }
-      - { name: passata, unit: g, amount: 30, scales: true }
-      - { name: garlic cloves, amount: 3, scales: false }
-      - { name: smoked paprika, unit: g, amount: 3, scales: false }
-      - { name: ground cumin, unit: g, amount: 3, scales: false }
-      - { name: chilli flakes, unit: g, amount: 2, scales: false }
-      - { name: Worcestershire sauce, unit: g, amount: 10, scales: false }
-      - { name: soy sauce, unit: g, amount: 10, scales: false }
-      - { name: lime, juiced, amount: 1, scales: false }
-      - { name: olive oil, unit: g, amount: 15, scales: false }
-      - { name: water, unit: g, amount: 60, scales: true }
-      - { name: salt, unit: g, amount: 3, scales: false }
-    steps:
-      - { title: Dump and mix, content: Add everything to the TM7 bowl. Mix to coat 10 sec / speed 1 / reverse., timer_seconds: 10 }
-      - { title: Cook, content: Cook 15 min / 120C / speed 1 / reverse / MC off., timer_seconds: 900 }
-      - { title: Shred, content: Shred 4 sec / speed 4 for chunky shreds., timer_seconds: 4 }
-      - { title: Reduce, content: Cook 3-5 min / 120C / speed 1 / MC off until glossy and clingy., timer_seconds: 240 }
+'
+  ingredients:
+  - name: chicken thighs, whole
+    unit: g
+    amount: 300
+    scales: true
+  - name: garlic cloves
+    amount: 3
+    scales: false
+  - name: smoked paprika
+    unit: g
+    amount: 3
+    scales: false
+  - name: ground cumin
+    unit: g
+    amount: 3
+    scales: false
+  - name: chilli flakes
+    unit: g
+    amount: 2
+    scales: false
+  - name: dried oregano
+    unit: g
+    amount: 2
+    scales: false
+  - name: lime, juiced
+    amount: 1
+    scales: false
+  - name: olive oil
+    unit: g
+    amount: 15
+    scales: false
+  - name: salt
+    unit: g
+    amount: 3
+    scales: false
+  - name: fresh coriander stalks, leaves reserved for topping
+    amount: 1
+    scales: false
+  steps:
+  - title: Blend the paste
+    content: Add garlic, smoked paprika, cumin, chilli flakes, oregano, lime juice,
+      olive oil, salt, and coriander stalks to TM7. Blend 10 sec / speed 8. Scrape
+      down and repeat once.
+    timer_seconds: 10
+  - title: Coat chicken
+    content: Add chicken thighs to the paste in the bowl. Mix to coat 10 sec / speed
+      1.
+    timer_seconds: 10
+  - title: Braise
+    content: Cook 25 min / Varoma / speed 0.5. The chicken braises slowly in its own
+      juices with the paste.
+    timer_seconds: 1500
+  - title: Shred
+    content: Shred in the bowl 5 sec / speed 4. Watch it - you want chunky shreds,
+      not mush. Finish by hand with forks if needed.
+    timer_seconds: 5
+  - title: Reduce
+    content: Cook off excess liquid 3-5 min / 100C / speed 1 / MC off until glossy
+      and clingy.
+    timer_seconds: 240
+- id: dump-and-cook-chicken-taco-mix
+  title: Dump-and-Cook Chicken Taco Mix
+  category: chicken
+  method: dump-and-cook
+  appliance: TM7
+  base_servings: 2
+  description: 'TM7 all-in shredded chicken taco filling - no paste-blending, no Varoma,
+    one bowl. Built for speed and minimal mess.
+
+'
+  ingredients:
+  - name: chicken thighs, cut about 3cm
+    unit: g
+    amount: 300
+    scales: true
+  - name: passata
+    unit: g
+    amount: 30
+    scales: true
+  - name: garlic cloves
+    amount: 3
+    scales: false
+  - name: smoked paprika
+    unit: g
+    amount: 3
+    scales: false
+  - name: ground cumin
+    unit: g
+    amount: 3
+    scales: false
+  - name: chilli flakes
+    unit: g
+    amount: 2
+    scales: false
+  - name: Worcestershire sauce
+    unit: g
+    amount: 10
+    scales: false
+  - name: soy sauce
+    unit: g
+    amount: 10
+    scales: false
+  - name: lime, juiced
+    amount: 1
+    scales: false
+  - name: olive oil
+    unit: g
+    amount: 15
+    scales: false
+  - name: water
+    unit: g
+    amount: 60
+    scales: true
+  - name: salt
+    unit: g
+    amount: 3
+    scales: false
+  steps:
+  - title: Dump and mix
+    content: Add everything to the TM7 bowl. Mix to coat 10 sec / speed 1 / reverse.
+    timer_seconds: 10
+  - title: Cook
+    content: Cook 15 min / 120C / speed 1 / reverse / MC off. Browning mode is unavailable
+      here because there is not enough solid material; 120C is the normal-mode ceiling.
+    timer_seconds: 900
+  - title: Shred
+    content: Shred in the bowl 4 sec / speed 4 - chunky shreds, not mush.
+    timer_seconds: 4
+  - title: Reduce
+    content: Cook 3-5 min / 120C / speed 1 / MC off until glossy and clingy. The original
+      cook ended here, so reduce until it looks right.
+    timer_seconds: 240
