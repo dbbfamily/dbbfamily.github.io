@@ -1,0 +1,10 @@
+title: KitchenOps
+description: A practical cooking system for recipes, techniques, and weeknight decisions.
+data:
+  recipes: recipes.yaml
+  techniques: techniques.yaml
+  skills: skills.yaml
+counts:
+  recipes: 4
+  techniques: 6
+  skills: 3

@@ -1,0 +1,19 @@
+techniques:
+  - id: stir_fry_sequencing
+    title: Stir-fry sequencing
+    summary: Cook protein and dense vegetables first, keep watery vegetables brief, and sauce only at the end.
+  - id: stir_fry_sauces
+    title: Stir-fry sauces
+    summary: Keep sauces concentrated and add them late so they coat instead of steaming the pan.
+  - id: tm7_aromatics
+    title: TM7 aromatics
+    summary: Chop aromatics first, scrape down, then saute before adding bulk ingredients.
+  - id: eggplant_prep
+    title: Eggplant preparation
+    summary: Salt or pre-cook eggplant when you need better browning and less oil absorption.
+  - id: crackling_reheat
+    title: Crackling reheat
+    summary: Reheat pork crackling hot and dry; avoid steam.
+  - id: chocolate_melting
+    title: Chocolate melting
+    summary: Use gentle heat and dry tools; water makes chocolate seize.
